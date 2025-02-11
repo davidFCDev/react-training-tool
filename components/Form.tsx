@@ -1,0 +1,68 @@
+/* eslint-disable prettier/prettier */
+import { Button } from "@nextui-org/button";
+import { Form } from "@nextui-org/form";
+import { Select, SelectItem } from "@nextui-org/select";
+import { toast } from "sonner";
+
+import { max_duration, training_type } from "@/constants";
+import { TrainingFormProps } from "@/types";
+
+export function TrainingForm({
+  onSubmit,
+  loading,
+  setFetchedWod,
+}: TrainingFormProps) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (e.target instanceof HTMLFormElement) {
+      const formData = new FormData(e.target);
+      const trainingType = formData.get("wod-type") as string;
+      const durationRaw = formData.get("duration") as string;
+      const duration = durationRaw.split(" ")[0];
+
+      if (!trainingType || !duration) {
+        toast.error("Please select a training and a duration");
+
+        return;
+      }
+
+      onSubmit(trainingType, duration);
+    }
+  };
+
+  return (
+    <Form
+      className="w-full"
+      validationBehavior="native"
+      onSubmit={handleSubmit}
+    >
+      <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+        <Select className="w-full" label="Select training" name="wod-type">
+          {training_type.map((type) => (
+            <SelectItem key={type} aria-label="wod-type">
+              {type}
+            </SelectItem>
+          ))}
+        </Select>
+      </div>
+
+      <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+        <Select className="w-full" label="Select max duration" name="duration">
+          {max_duration.map((duration) => (
+            <SelectItem key={duration} aria-label="duration">
+              {duration}
+            </SelectItem>
+          ))}
+        </Select>
+      </div>
+      <div className="flex gap-2">
+        <Button color="success" type="submit">
+          {loading ? "Loading..." : "Generate"}
+        </Button>
+        <Button type="reset" variant="flat" onPress={() => setFetchedWod(null)}>
+          Reset
+        </Button>
+      </div>
+    </Form>
+  );
+}
