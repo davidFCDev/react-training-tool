@@ -1,12 +1,18 @@
 "use client";
 /* eslint-disable prettier/prettier */
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@heroui/modal";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { useState } from "react";
 
 import { DeleteIcon } from "./Icons";
-import ModalTraining from "./ModalTraining";
 
 import useSaveTraining from "@/hooks/useSaveTraining";
 import { TrainingProps } from "@/types";
@@ -19,6 +25,13 @@ export const Training = ({
 }: TrainingProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isSaving, saveTraining, deleteTraining } = useSaveTraining();
+
+  const handleDelete = () => {
+    deleteTraining(id);
+    setIsModalOpen(false);
+  };
+
+  // TODO: Extraer modal
 
   return (
     <>
@@ -50,7 +63,7 @@ export const Training = ({
                 ? saveTraining(JSON.stringify(fetchedWod, null, 2), () =>
                     setFetchedWod(null)
                   )
-                : deleteTraining(id)
+                : setIsModalOpen(true)
             }
           >
             {isNotFavorite ? isSaving ? "Saving..." : "Save" : <DeleteIcon />}
@@ -79,11 +92,30 @@ export const Training = ({
         </CardBody>
       </Card>
 
-      <ModalTraining
-        content={fetchedWod}
+      <Modal
         isOpen={isModalOpen}
+        size="xl"
         onClose={() => setIsModalOpen(false)}
-      />
+      >
+        <ModalContent>
+          {() => (
+            <>
+              <ModalHeader>Confirm Deletion</ModalHeader>
+              <ModalBody>
+                <p>Are you sure you want to delete this training?</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" onPress={handleDelete}>
+                  Yes, Delete
+                </Button>
+                <Button color="default" onPress={() => setIsModalOpen(false)}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };

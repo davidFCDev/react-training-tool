@@ -37,8 +37,8 @@ export interface TrainingFormProps {
   setFetchedWod: (training: TrainingData | null) => void;
 }
 
-export interface ModalWodProps {
+export interface ModalTrainingProps {
   isOpen: boolean;
   onClose: () => void;
-  content: TrainingData;
+  onConfirm: () => void;
 }

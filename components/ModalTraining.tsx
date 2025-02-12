@@ -1,38 +1,23 @@
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from "@heroui/modal";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "@heroui/modal";
 import { Button } from "@nextui-org/button";
 
-import { ModalWodProps } from "@/types";
+import { ModalTrainingProps } from "@/types";
 
-const ModalTraining = ({ isOpen, onClose, content }: ModalWodProps) => {
+const ModalTraining = ({ isOpen, onClose, onConfirm }: ModalTrainingProps) => {
   return (
-    <Modal isOpen={isOpen} size="xl" onClose={onClose}>
-      <ModalContent>
-        {() => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">Hyrox</ModalHeader>
-            <ModalBody>
-              <div className="whitespace-pre-wrap">
-                {Object.entries(content).map(([key, value]) => (
-                  <p key={key} className="mb-2">
-                    <strong className="capitalize">{key}:</strong> {value}
-                  </p>
-                ))}
-              </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalHeader>Confirm Deletion</ModalHeader>
+      <ModalBody>
+        <p>Are you sure you want to delete this training?</p>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="danger" onPress={onConfirm}>
+          Yes, Delete
+        </Button>
+        <Button color="default" onPress={onClose}>
+          Cancel
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 };
