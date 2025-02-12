@@ -3,11 +3,11 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 interface Training {
+  type?: string;
   warmup?: string;
   strength?: string;
   metcon?: string;
   accessory?: string;
-  notes?: string;
 }
 
 interface TrainingResponse {
@@ -15,11 +15,11 @@ interface TrainingResponse {
 }
 
 const initialTrainingState: Training = {
+  type: "",
   warmup: "",
   strength: "",
   metcon: "",
   accessory: "",
-  notes: "",
 };
 
 const useTraining = () => {

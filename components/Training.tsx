@@ -5,8 +5,8 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { useState } from "react";
 
+import { DeleteIcon } from "./Icons";
 import ModalTraining from "./ModalTraining";
-import { DeleteIcon } from "./icons";
 
 import useSaveTraining from "@/hooks/useSaveTraining";
 import { TrainingProps } from "@/types";
@@ -59,7 +59,7 @@ export const Training = ({
 
         <Divider />
 
-        {/* Contenido en columnas */}
+        {/* Column content */}
         <CardBody className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6">
           {Object.entries(fetchedWod)
             .filter(([key]) => key !== "type")

@@ -11,7 +11,7 @@ import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 import NextLink from "next/link";
 
-import { GithubIcon, HeartFilledIcon, Logo } from "@/components/icons";
+import { GithubIcon, HeartFilledIcon, Logo } from "@/components/Icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 

@@ -18,7 +18,7 @@ export default function Create() {
 
   return (
     <div className="w-full min-w-80 flex flex-col items-center justify-center">
-      {/* Mostrar el formulario si no hay entrenamiento o está vacío */}
+      {/* Show form if there is not a training */}
       {!loading && (!fetchedTraining || isEmptyTraining(fetchedTraining)) && (
         <TrainingForm
           loading={loading}
@@ -27,14 +27,14 @@ export default function Create() {
         />
       )}
 
-      {/* Mostrar spinner mientras carga */}
+      {/* Show loading spinner */}
       {loading && (
         <div className="flex gap-4">
           <Spinner color="success" size="lg" />
         </div>
       )}
 
-      {/* Mostrar entrenamiento si tiene datos */}
+      {/* Show training if training exists */}
       {!loading && fetchedTraining && !isEmptyTraining(fetchedTraining) && (
         <div className="min-w-80">
           <Training
