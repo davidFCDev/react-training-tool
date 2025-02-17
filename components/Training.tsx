@@ -1,18 +1,13 @@
 "use client";
 /* eslint-disable prettier/prettier */
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from "@heroui/modal";
+
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { useState } from "react";
 
-import { DeleteIcon } from "./Icons";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import { DeleteIcon } from "./icons";
 
 import useSaveTraining from "@/hooks/useSaveTraining";
 import { TrainingProps } from "@/types";
@@ -31,11 +26,9 @@ export const Training = ({
     setIsModalOpen(false);
   };
 
-  // TODO: Extraer modal
-
   return (
     <>
-      <Card className="w-full max-w-3xl p-6 rounded-lg shadow-lg">
+      <Card className="w-full max-w-3xl p-4 rounded-lg shadow-lg">
         {/* Header */}
         <CardHeader className="flex justify-between items-center">
           {isNotFavorite ? (
@@ -47,10 +40,17 @@ export const Training = ({
               Back
             </Button>
           ) : (
-            <div className="invisible" />
+            <div>
+              {fetchedWod.time && (
+                <p className="text-sm text-gray-400">
+                  Time: <span className="text-gray-300">{fetchedWod.time}</span>{" "}
+                  min
+                </p>
+              )}
+            </div>
           )}
 
-          <h2 className="font-semibold text-2xl text-success-500">
+          <h2 className="font-semibold text-xl text-success-500 ">
             {fetchedWod.type}
           </h2>
 
@@ -75,15 +75,15 @@ export const Training = ({
         {/* Column content */}
         <CardBody className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6">
           {Object.entries(fetchedWod)
-            .filter(([key]) => key !== "type")
+            .filter(([key]) => key !== "type" && key !== "time")
             .map(([key, value]) =>
               value ? (
                 <div key={key} className="p-4 rounded-lg shadow-md bg-content1">
-                  <h3 className="text-lg font-bold uppercase text-left mb-3">
+                  <h3 className="text-lg font-bold uppercase text-left mb-3 text-gray-200">
                     {key}
                   </h3>
                   <Divider />
-                  <pre className="whitespace-pre-wrap text-sm mt-3">
+                  <pre className="whitespace-pre-wrap text-sm mt-3 text-gray-300">
                     {value}
                   </pre>
                 </div>
@@ -92,30 +92,11 @@ export const Training = ({
         </CardBody>
       </Card>
 
-      <Modal
+      <ConfirmDeleteModal
         isOpen={isModalOpen}
-        size="xl"
         onClose={() => setIsModalOpen(false)}
-      >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalHeader>Confirm Deletion</ModalHeader>
-              <ModalBody>
-                <p>Are you sure you want to delete this training?</p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" onPress={handleDelete}>
-                  Yes, Delete
-                </Button>
-                <Button color="default" onPress={() => setIsModalOpen(false)}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        onConfirm={handleDelete}
+      />
     </>
   );
 };

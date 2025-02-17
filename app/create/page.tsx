@@ -4,6 +4,7 @@ import { Spinner } from "@nextui-org/spinner";
 
 import { TrainingForm } from "@/components/Form";
 import { Training } from "@/components/Training";
+import withAuth from "@/hoc/withAuth";
 import useTraining from "@/hooks/useTraining";
 
 const isEmptyTraining = (training: any) => {
@@ -12,7 +13,7 @@ const isEmptyTraining = (training: any) => {
   return Object.values(training).every((value) => value === "");
 };
 
-export default function Create() {
+function Create() {
   const { getTraining, loading, fetchedTraining, setFetchedTraining } =
     useTraining();
 
@@ -48,3 +49,5 @@ export default function Create() {
     </div>
   );
 }
+
+export default withAuth(Create);

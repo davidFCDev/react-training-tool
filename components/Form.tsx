@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { Textarea } from "@heroui/input";
 import { Button } from "@nextui-org/button";
 import { Form } from "@nextui-org/form";
 import { Select, SelectItem } from "@nextui-org/select";
@@ -16,6 +17,7 @@ export function TrainingForm({
     e.preventDefault();
     if (e.target instanceof HTMLFormElement) {
       const formData = new FormData(e.target);
+      const observations = formData.get("observations") as string;
       const trainingType = formData.get("wod-type") as string;
       const durationRaw = formData.get("duration") as string;
       const duration = durationRaw.split(" ")[0];
@@ -26,7 +28,7 @@ export function TrainingForm({
         return;
       }
 
-      onSubmit(trainingType, duration);
+      onSubmit(trainingType, duration, observations);
     }
   };
 
@@ -54,6 +56,14 @@ export function TrainingForm({
             </SelectItem>
           ))}
         </Select>
+      </div>
+
+      <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+        <Textarea
+          label="Observations"
+          name="observations"
+          placeholder="Enter any observations here"
+        />
       </div>
       <div className="flex gap-2">
         <Button color="success" type="submit">

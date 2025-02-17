@@ -1,23 +1,26 @@
 /* eslint-disable no-console */
 import { useEffect, useState } from "react";
 
-import { setFavorites } from "@/app/redux/favoritesReducer";
-import { useAppDispatch, useAppSelector } from "@/app/redux/store";
 import DataService from "@/app/service/data.service";
+import { setFavorites } from "@/redux/favoritesReducer";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 
 const useFavorites = () => {
   const dispatch = useAppDispatch();
   const [category, setCategory] = useState("All");
+  const [loading, setLoading] = useState(false);
 
   const trainingList =
     useAppSelector((state) => state.favorites.favoriteList) || [];
 
   useEffect(() => {
     const getTraining = async () => {
+      setLoading(true);
       const dataService = new DataService();
       const data = await dataService.getCollection("favorites");
 
       dispatch(setFavorites(data));
+      setLoading(false);
     };
 
     getTraining();
@@ -44,7 +47,7 @@ const useFavorites = () => {
         (category === "All" || training.parsedTraining.type === category)
     );
 
-  return { category, setCategory, filteredTrainingList };
+  return { category, setCategory, filteredTrainingList, loading };
 };
 
 export { useFavorites };

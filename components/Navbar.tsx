@@ -1,4 +1,5 @@
-import { Button } from "@nextui-org/button";
+"use client";
+
 import { Link } from "@nextui-org/link";
 import {
   NavbarBrand,
@@ -11,11 +12,30 @@ import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 import NextLink from "next/link";
 
-import { GithubIcon, HeartFilledIcon, Logo } from "@/components/Icons";
+import { GithubIcon, Logo } from "./icons";
+import ProfileDropdown from "./ProfileDropdown";
+
 import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
+import { useAuth } from "@/context/authContext";
 
 export const Navbar = () => {
+  const { user } = useAuth();
+
+  const filteredNavItems = user
+    ? siteConfig.navItems.filter(
+        (item) =>
+          item.label === "Home" ||
+          item.label === "Create" ||
+          item.label === "Favorites"
+      )
+    : siteConfig.navItems.filter(
+        (item) =>
+          item.label === "Home" ||
+          item.label === "Login" ||
+          item.label === "Register"
+      );
+
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -28,7 +48,7 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
@@ -49,23 +69,12 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
+        <NavbarItem className="hidden sm:flex gap-4">
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
             <GithubIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />
-        </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <Button
-            isExternal
-            as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.links.sponsor}
-            startContent={<HeartFilledIcon className="text-danger" />}
-            variant="flat"
-          >
-            Sponsor
-          </Button>
+          {user ? <ProfileDropdown /> : null}
         </NavbarItem>
       </NavbarContent>
 

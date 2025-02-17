@@ -21,7 +21,7 @@ export const ArrowsPointing: React.FC<IconSvgProps> = () => (
 
 export const DeleteIcon: React.FC<IconSvgProps> = () => (
   <svg
-    className="size-6"
+    className="size-5"
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"

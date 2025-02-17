@@ -30,14 +30,19 @@ const useTraining = () => {
   const [error, setError] = useState<string | null>(null);
 
   const getTraining = useCallback(
-    async (trainingType: string, duration: string) => {
+    async (trainingType: string, duration: string, observations?: string) => {
       setLoading(true);
       setError(null);
 
       try {
-        const response = await fetch(
-          `/api/trainner?training_type=${trainingType}&duration=${duration}`
-        );
+        // Dinamic URL
+        let url = `/api/trainner?training_type=${trainingType}&duration=${duration}`;
+
+        if (observations) {
+          url += `&observations=${encodeURIComponent(observations)}`;
+        }
+
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -47,7 +52,7 @@ const useTraining = () => {
 
         if (!data?.training || typeof data.training !== "object") {
           throw new Error(
-            "La respuesta no contiene un objeto 'training' válido."
+            "Response is not valid. Please check the API response"
           );
         }
 
@@ -57,7 +62,7 @@ const useTraining = () => {
           error instanceof Error ? error.message : "Error desconocido";
 
         setError(errorMessage);
-        toast.error("No se ha podido generar el entrenamiento");
+        toast.error("Error getting training. Please try again later");
         console.error(errorMessage);
       } finally {
         setLoading(false);

@@ -7,7 +7,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-import { db } from "../firebase";
+import { db } from "../firebase/firebase";
 
 class DataService {
   async getCollection(collectionName: string) {

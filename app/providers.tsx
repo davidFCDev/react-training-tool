@@ -8,19 +8,13 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { Provider } from "react-redux";
 
-import { store } from "./redux/store";
+import { store } from "../redux/store";
+
+import { AuthProvider } from "@/context/authContext";
 
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
-}
-
-declare module "@react-types/shared" {
-  interface RouterConfig {
-    routerOptions: NonNullable<
-      Parameters<ReturnType<typeof useRouter>["push"]>[1]
-    >;
-  }
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
@@ -28,9 +22,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <Provider store={store}>
-      <NextUIProvider navigate={router.push}>
-        <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-      </NextUIProvider>
+      <AuthProvider>
+        <NextUIProvider navigate={router.push}>
+          <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+        </NextUIProvider>
+      </AuthProvider>
     </Provider>
   );
 }

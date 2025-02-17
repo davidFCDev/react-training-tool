@@ -15,6 +15,7 @@ export interface TrainingData {
   metcon?: string;
   accessory?: string;
   type?: string;
+  time?: string;
 }
 
 export interface TrainingProps {
@@ -32,7 +33,11 @@ export interface TrainingData {
 }
 
 export interface TrainingFormProps {
-  onSubmit: (trainingType: string, duration: string) => void;
+  onSubmit: (
+    trainingType: string,
+    duration: string,
+    observations: string
+  ) => void;
   loading: boolean;
   setFetchedWod: (training: TrainingData | null) => void;
 }

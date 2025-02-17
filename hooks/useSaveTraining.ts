@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-import { removeFavorite } from "@/app/redux/favoritesReducer";
-import { useAppDispatch } from "@/app/redux/store";
 import DataService from "@/app/service/data.service";
+import { removeFavorite } from "@/redux/favoritesReducer";
+import { useAppDispatch } from "@/redux/store";
 
 const useSaveTraining = () => {
   const [isSaving, setIsSaving] = useState(false);

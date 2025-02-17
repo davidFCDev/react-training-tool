@@ -35,7 +35,11 @@ const iaComplete = async (messages: ChatMessage[], model: string) => {
   }
 };
 
-async function generate_training(training_type: string, duration: number) {
+async function generate_training(
+  training_type: string,
+  duration: number,
+  observations?: string
+) {
   const messages: ChatMessage[] = [
     {
       role: "system",
@@ -48,6 +52,7 @@ async function generate_training(training_type: string, duration: number) {
       Si el tiempo es menor al tiempo máximo, añade ejercicios adicionales.
       Aunque tengas algún problema con los tiempos, sigue adelante y genera el entrenamiento.
       Quiero que te guíes por otros entrenamientos de Crossfit, Hyrox o Endurance para generar el entrenamiento, como pueden ser los que se conocen como "Hero WODs" o "Benchmark WODs".
+      Si recibes observaciones, intenta incluirlas en el entrenamiento.
       
       🔹 **Formato**:  
       - Usa saltos de línea para separar ejercicios.  
@@ -59,6 +64,7 @@ async function generate_training(training_type: string, duration: number) {
       🔹 **Ejemplo de salida JSON (correcto)**:
       {
         "type": "Crossfit",
+        "time": "60",
         "warmup": "-5 min de rowing\\n- 10 min mobility\\n\\n2 Rounds\\n- 10 Cat Cow\\n- 5+5 Shoulder Cars\\n- 10 PVC Passthroughs\\n- 30\\\" Bottom OH Squat Hold",
         "strength": "Snatch\\n- 5x2 @ 70% 1RM\\n\\nStrict Pull Ups\\n4 Sets\\n- 4x6 Pull Ups Estrictos\\n- 8/12 Ring Rows 2020",
         "metcon": "4 Rounds\\n- 10 Toes to Bar\\n- 12 Dumbbell Snatch (30/20kg)\\n- 10 Burpees over the Dumbbell",
@@ -76,13 +82,15 @@ async function generate_training(training_type: string, duration: number) {
     },
     {
       role: "user",
-      content: `Entrenamiento de Hyrox con una duración máxima de 60 minutos`,
+      content:
+        "Entrenamiento de Hyrox con una duración máxima de 60 minutos. Observaciones: Intervalos de carrera",
     },
     {
       role: "assistant",
       content: `
       {
         "type": "Hyrox",
+        "time": "60",
         "warmup": "- 5 min de rowing\\n- 10 min mobility\\n\\n2 Rounds\\n- 10 Cat Cow\\n- 5+5 Shoulder Cars\\n- 10 PVC Passthroughs\\n- 30\\\" Bottom OH Squat Hold",
         "strength": "",
         "metcon": "2 Rounds For Time\\n- 200m Run\\n- 20/15 CAL SkiErg\\n- 200m Run\\n- 20m Sled Push (60/40kg)\\n- 200m Run\\n- 20 Db Snatch (22.5/15kg)\\n- 200m Run\\n- 20 Burpees over the Db\\n- 200m Run\\n- 20/15 CAL Row\\n- 200m Run\\n- 40m Heavy Farmers Carry (2x32/24kg)\\n- 200m Run\\n- 20m Back Rack Walking Lunges\\n- 200m Run\\n- 20 Wall Balls (9/6kg)",
@@ -92,13 +100,14 @@ async function generate_training(training_type: string, duration: number) {
     },
     {
       role: "user",
-      content: `Entrenamiento de Crossfit con una duración máxima de 75 minutos`,
+      content: `Entrenamiento de Crossfit con una duración máxima de 75 minutos. Observaciones: Quiero que tenga row y burpees`,
     },
     {
       role: "assistant",
       content: `
       {
         "type": "Crossfit",
+        "time": "75",
         "warmup": "- 5 min de rowing\\n- 10 min mobility\\n\\n2 Rounds\\n- 10 Cat Cow\\n- 5+5 Shoulder Cars\\n- 10 PVC Passthroughs\\n- 30\\\" Bottom OH Squat Hold",
         "strength": "Snatch\\n- 5x2 @ 70% 1RM\\n\\nStrict Pull Ups\\n4 Sets\\n- 4x6 Pull Ups Estrictos\\n- 8/12 Ring Rows 2020",
         "metcon": "4 Rounds\\n- 10 Toes to Bar\\n- 12 Dumbbell Snatch (30/20kg)\\n- 10 Burpees over the Dumbbell",
@@ -115,15 +124,33 @@ async function generate_training(training_type: string, duration: number) {
       content: `
       {
         "type": "Endurance",
+        "time": "75",
         "warmup": "- 5 min de Assault Bike\\n- 10 min mobility\\n\\n2 Rounds\\n- 10 World’s Greatest Stretch (5/side)\\n- 10 Leg Swings (front & side)\\n- 30\\\" High Knees\\n- 30\\\" Butt Kicks",
         "metcon": "3 Rounds For Time\\n- 400m Run\\n- 500/400m Row\\n- 400m Run\\n- 25/20 CAL SkiErg\\n- 400m Run\\n- 40m Sled Push (50/35kg)\\n- 400m Run\\n- 20 Box Jump Overs (24/20”)",
         "accessory": "3 Rounds\\n- 12 Bulgarian Split Squats (6/side)\\n- 15 Hollow Rocks\\n- 20 Russian Twists (10/side)"
       }
       `,
     },
+    // {
+    //   role: "user",
+    //   content:
+    //     "Entrenamiento de Crossfit por equipos con una duración máxima de 60 minutos. Observaciones: Quiero que tenga saltos de cuerda y wall balls",
+    // },
+    // {
+    //   role: "assistant",
+    //   content: `
+    //   {
+    //     "type": "Crossfit",
+    //     "time": "60",
+    //     "warmup": "- 5 min de Assault Bike\\n- 10 min mobility\\n\\n2 Rounds\\n- 10 World’s Greatest Stretch (5/side)\\n- 10 Leg Swings (front & side)\\n- 30\\\" High Knees\\n- 30\\\" Butt Kicks",
+    //     "strength": "Snatch\\n- 5x2 @ 70% 1RM\\n\\nStrict Pull Ups\\n4 Sets\\n- 4x6 Pull Ups Estrictos\\n- 8/12 Ring Rows 2020",
+    //     "metcon": "4 Rounds For Time\\n- 50 Double Unders\\n- 40 Wall Balls (9/6kg)\\n- 30 Box Jump Overs (24/20”)\\n- 20 Burpees over the Box",
+    //     "accessory": "3 Rounds\\n- 12 Bulgarian Split Squats (6/side)\\n- 15 Hollow Rocks\\n- 20 Russian Twists (10/side)"
+    //   }`,
+    // },
     {
       role: "user",
-      content: `Entrenamiento de ${training_type} con una duración máxima de ${duration} minutos`,
+      content: `Entrenamiento de ${training_type} con una duración máxima de ${duration} minutos. ${observations ? `Observaciones: ${observations}` : ""}`,
     },
   ];
 
@@ -134,6 +161,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const training_type = searchParams.get("training_type");
   const durationStr = searchParams.get("duration");
+  const observations = searchParams.get("observations") || undefined;
 
   // Param validation
   if (!training_type || !durationStr) {
@@ -157,7 +185,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const wod = await generate_training(training_type, duration);
+    const wod = await generate_training(training_type, duration, observations);
 
     if (!wod) {
       return new Response(

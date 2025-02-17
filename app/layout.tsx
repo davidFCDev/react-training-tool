@@ -51,11 +51,11 @@ export default function RootLayout({
             <footer className="w-full flex items-center justify-center py-3">
               <Link
                 isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://www.linkedin.com/in/david-fernandez-comesa%C3%B1a/"
-                title="nextui.org homepage"
+                className="flex gap-1 text-current text-xs"
+                href="https://github.com/davidFCDev"
+                title="DavidFC GitHub"
               >
-                <span className="text-default-600">Created by</span>
+                <span className="text-default-600 ">Created with ❤️ by</span>
                 <p className="text-success">DavidFC</p>
               </Link>
             </footer>
