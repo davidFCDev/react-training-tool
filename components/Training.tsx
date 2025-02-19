@@ -4,11 +4,12 @@
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
-import { useState } from "react";
 
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import { DeleteIcon } from "./icons";
+import DetailsModal from "./DetailsModal";
+import { ArrowsPointing, DeleteIcon } from "./icons";
 
+import useModals from "@/hooks/useModals";
 import useSaveTraining from "@/hooks/useSaveTraining";
 import { TrainingProps } from "@/types";
 
@@ -18,19 +19,19 @@ export const Training = ({
   isNotFavorite,
   id,
 }: TrainingProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { isSaving, saveTraining, deleteTraining } = useSaveTraining();
+  const { isModalOpen, isTrainingModalOpen, openModal, closeModal } =
+    useModals();
 
   const handleDelete = () => {
     deleteTraining(id);
-    setIsModalOpen(false);
+    closeModal("delete");
   };
 
   return (
     <>
       <Card className="w-full max-w-3xl p-4 rounded-lg shadow-lg">
-        {/* Header */}
-        <CardHeader className="flex justify-between items-center">
+        <CardHeader className="flex justify-between items-center gap-4">
           {isNotFavorite ? (
             <Button
               color="default"
@@ -40,40 +41,45 @@ export const Training = ({
               Back
             </Button>
           ) : (
-            <div>
-              {fetchedWod.time && (
-                <p className="text-sm text-gray-400">
-                  Time: <span className="text-gray-300">{fetchedWod.time}</span>{" "}
-                  min
-                </p>
-              )}
-            </div>
+            fetchedWod.time && (
+              <p className="text-sm text-gray-400">
+                Time: <span className="text-gray-300">{fetchedWod.time}</span>{" "}
+                min
+              </p>
+            )
           )}
-
-          <h2 className="font-semibold text-xl text-success-500 ">
+          <h2 className="font-semibold text-xl text-success-500 flex-grow text-center">
             {fetchedWod.type}
           </h2>
-
-          <Button
-            color={isNotFavorite ? "success" : "danger"}
-            disabled={isNotFavorite && isSaving}
-            variant={isNotFavorite ? "flat" : "light"}
-            onPress={() =>
-              isNotFavorite
-                ? saveTraining(JSON.stringify(fetchedWod, null, 2), () =>
-                    setFetchedWod(null)
-                  )
-                : setIsModalOpen(true)
-            }
-          >
-            {isNotFavorite ? isSaving ? "Saving..." : "Save" : <DeleteIcon />}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              color={isNotFavorite ? "success" : "danger"}
+              disabled={isNotFavorite && isSaving}
+              variant={isNotFavorite ? "flat" : "light"}
+              onPress={() =>
+                isNotFavorite
+                  ? saveTraining(JSON.stringify(fetchedWod, null, 2), () =>
+                      setFetchedWod(null)
+                    )
+                  : openModal("delete")
+              }
+            >
+              {isNotFavorite ? isSaving ? "Saving..." : "Save" : <DeleteIcon />}
+            </Button>
+            {!isNotFavorite && (
+              <Button variant="light" onPress={() => openModal("details")}>
+                <ArrowsPointing />
+              </Button>
+            )}
+          </div>
         </CardHeader>
-
         <Divider />
-
-        {/* Column content */}
-        <CardBody className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6">
+        <CardBody
+          className={`grid grid-cols-1 sm:grid-cols-2 gap-6 py-4 ${!isNotFavorite ? "mb-4 max-h-40 overflow-hidden relative" : ""}`}
+        >
+          {!isNotFavorite && (
+            <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-neutral-900 to-transparent pointer-events-none" />
+          )}
           {Object.entries(fetchedWod)
             .filter(([key]) => key !== "type" && key !== "time")
             .map(([key, value]) =>
@@ -91,10 +97,14 @@ export const Training = ({
             )}
         </CardBody>
       </Card>
-
+      <DetailsModal
+        fetchedWod={fetchedWod}
+        isOpen={isTrainingModalOpen}
+        onOpenChange={() => closeModal("details")}
+      />
       <ConfirmDeleteModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => closeModal("delete")}
         onConfirm={handleDelete}
       />
     </>
