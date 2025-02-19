@@ -14,8 +14,10 @@ function Favorites() {
 
   return (
     <div className="w-full min-w-80 flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold">Workouts</h1>
-      <p className="text-lg text-gray-300">Your favorite trainings</p>
+      <div>
+        <h1 className="title">Workouts</h1>
+        <p className="subtitle">Your favorite trainings</p>
+      </div>
       <FilterButtons category={category} setCategory={setCategory} />
       <div className="mt-10">
         {loading ? (

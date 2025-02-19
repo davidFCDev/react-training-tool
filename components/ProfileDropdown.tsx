@@ -7,7 +7,7 @@ import {
 } from "@heroui/dropdown";
 import { toast } from "sonner";
 
-import authService from "@/app/service/auth.service";
+import authService from "@/service/auth.service";
 
 const ProfileDropdown = () => {
   const handleLogout = async () => {

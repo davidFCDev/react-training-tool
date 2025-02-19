@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import { useEffect, useState } from "react";
 
-import DataService from "@/app/service/data.service";
 import { setFavorites } from "@/redux/favoritesReducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+import DataService from "@/service/data.service";
 
 const useFavorites = () => {
   const dispatch = useAppDispatch();

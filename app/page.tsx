@@ -1,43 +1,58 @@
+"use client";
 import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
 import { button as buttonStyles } from "@nextui-org/theme";
 
-import { subtitle, title } from "@/components/primitives";
+import { subtitle } from "@/components/primitives";
+import { useAuth } from "@/context/authContext";
 
 export default function Home() {
+  const { user } = useAuth();
+
   return (
-    <section className="relative flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-xl text-center justify-center text-">
-        <span className={title()}>Create&nbsp;</span>
-        <span className={title({ color: "green" })}>WORKOUTS&nbsp;</span>
+    <section className="relative flex flex-col items-center justify-center gap-4 py-8 md:py-20">
+      <div className="inline-block max-w-xl text-center justify-center text-7xl font-extrabold leading-tight anton-regular">
+        <span>Create&nbsp;</span>
+        <span className="text-success">WORKOUTS&nbsp;</span>
         <br />
-        <span className={title()}>easy with AI</span>
-        <div className={subtitle({ class: "mt-4" })}>Easy, fast and free.</div>
+        <span>easy with AI</span>
+      </div>
+
+      <div className={`${subtitle({ class: "mt-4" })} text-center `}>
+        Easy, fast and free.
       </div>
 
       <div className="flex gap-3">
-        <Link
-          className={buttonStyles({
-            color: "success",
-            radius: "full",
-            variant: "ghost",
-          })}
-          href="/login"
-        >
-          Login
-        </Link>
-        <Link
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href="/register"
-        >
-          Register
-        </Link>
-      </div>
-
-      <div className="mt-8">
-        <Snippet hideCopyButton hideSymbol>
-          <span>Get your first training today!</span>
-        </Snippet>
+        {!user ? (
+          <>
+            <Link
+              className={buttonStyles({
+                color: "success",
+                radius: "full",
+                variant: "ghost",
+              })}
+              href="/login"
+            >
+              Login
+            </Link>
+            <Link
+              className={buttonStyles({ variant: "bordered", radius: "full" })}
+              href="/register"
+            >
+              Register
+            </Link>
+          </>
+        ) : (
+          <Link
+            className={buttonStyles({
+              color: "success",
+              radius: "full",
+              variant: "ghost",
+            })}
+            href="/create"
+          >
+            Create Workout
+          </Link>
+        )}
       </div>
     </section>
   );
