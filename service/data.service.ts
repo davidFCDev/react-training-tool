@@ -16,11 +16,17 @@ class DataService {
     return querySnapshot.docs.map((doc) => {
       const data = doc.data();
 
-      return { id: doc.id, training: data.training || "" };
+      console.log("🔥 Data from Firebase:", data);
+
+      return {
+        id: doc.id,
+        date: data.date || "",
+        training: data.training || "",
+      };
     });
   }
 
-  async addDocument(collectionName: string, data: { training: string }) {
+  async addDocument(collectionName: string, data: Record<string, any>) {
     try {
       const docRef = await addDoc(collection(db, collectionName), data);
 

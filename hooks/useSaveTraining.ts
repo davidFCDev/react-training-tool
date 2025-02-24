@@ -26,7 +26,6 @@ const useSaveTraining = () => {
         await dataService.addDocument("favorites", { training });
         toast.success("Workout saved successfully.");
 
-        // Si se proporciona una función de éxito, la ejecutamos
         if (onSuccess) onSuccess();
       } catch {
         setSaveError("Error saving the workout. Please try again later.");

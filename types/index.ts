@@ -47,3 +47,26 @@ export interface ModalTrainingProps {
   onClose: () => void;
   onConfirm: () => void;
 }
+
+export interface DetailsModalProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  fetchedWod: Record<string, any>;
+  showChangeButton?: boolean;
+  onChangeTraining?: () => void;
+  onDeleteTraining?: () => void;
+}
+
+export interface AddTrainingModalProps {
+  isModalOpen: boolean;
+  setIsModalOpen: (arg0: boolean) => void;
+  loading: boolean;
+  filteredTrainingList: any[];
+  handleTrainingSelect: (arg0: string) => void;
+}
+
+export interface TrainingScheduleItem {
+  id: string;
+  date: string;
+  training: any;
+}

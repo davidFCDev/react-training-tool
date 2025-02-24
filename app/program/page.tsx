@@ -1,40 +1,35 @@
 /* eslint-disable no-console */
 "use client";
 
-import { Select, SelectItem } from "@nextui-org/select";
-import { useState } from "react";
-
-import { AddIcon } from "@/components/icons";
+import { AddTrainingModal } from "@/components/AddTrainingModal";
+import Calendar from "@/components/Calendar";
+import DaysOfWeek from "@/components/DaysOfWeek";
+import DetailsModal from "@/components/DetailsModal";
+import MonthSelector from "@/components/MonthSelector";
+import YearSelector from "@/components/YearSelector";
 import withAuth from "@/hoc/withAuth";
-import { getDaysInMonth } from "@/utils/dateUtils";
+import useProgram from "@/hooks/useProgram";
 
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
-
-function Program() {
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-  const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
-  const firstDayOfMonth =
-    (new Date(selectedYear, selectedMonth, 1).getDay() + 6) % 7; // Ajuste para lunes
-  const lastDayOfMonth =
-    (new Date(selectedYear, selectedMonth, daysInMonth).getDay() + 6) % 7;
-  const totalDays = firstDayOfMonth + daysInMonth + (6 - lastDayOfMonth);
+const Program: React.FC = () => {
+  const {
+    selectedMonth,
+    setSelectedMonth,
+    selectedYear,
+    setSelectedYear,
+    trainingSchedule,
+    loading,
+    days,
+    isAddTrainingModalOpen,
+    setIsAddTrainingModalOpen,
+    isDetailsModalOpen,
+    setIsDetailsModalOpen,
+    selectedTraining,
+    filteredTrainingList,
+    handleDateClick,
+    handleTrainingSelect,
+    onDeleteTraining,
+    monthsWithTraining,
+  } = useProgram();
 
   return (
     <div className="w-full min-w-80 flex flex-col items-center justify-center p-4">
@@ -44,91 +39,40 @@ function Program() {
       </header>
 
       <div className="mb-4 flex gap-4">
-        <Select
-          isRequired
-          aria-label="Select a month"
-          className="w-48"
-          label="Month"
-          placeholder="Select a month"
-          selectedKeys={new Set([String(selectedMonth)])}
-          onSelectionChange={(keys) => {
-            const selectedKey = Array.from(keys)[0];
+        <MonthSelector
+          {...{ selectedMonth, setSelectedMonth, monthsWithTraining }}
+        />
 
-            if (selectedKey) {
-              setSelectedMonth(Number(selectedKey));
-            }
-          }}
-        >
-          {months.map((month, index) => (
-            <SelectItem
-              key={String(index)}
-              textValue={month}
-              value={String(index)}
-            >
-              {month}
-            </SelectItem>
-          ))}
-        </Select>
-        <Select
-          isRequired
-          aria-label="Select a year"
-          className="w-32"
-          label="Year"
-          placeholder="Select a year"
-          selectedKeys={new Set([String(selectedYear)])}
-          onSelectionChange={(keys) => {
-            const selectedKey = Array.from(keys)[0];
-
-            if (selectedKey) {
-              setSelectedYear(Number(selectedKey));
-            }
-          }}
-        >
-          {years.map((year) => (
-            <SelectItem
-              key={String(year)}
-              textValue={String(year)}
-              value={String(year)}
-            >
-              {year}
-            </SelectItem>
-          ))}
-        </Select>
+        <YearSelector {...{ selectedYear, setSelectedYear }} />
       </div>
 
       <main className="grid grid-cols-7 gap-2 w-full">
-        {Array.from({ length: totalDays }, (_, i) => {
-          const dayIndex = i - firstDayOfMonth + 1;
-          const isSunday =
-            (new Date(selectedYear, selectedMonth, dayIndex).getDay() + 6) %
-              7 ===
-            6;
-          const isPlaceholder = dayIndex < 1 || dayIndex > daysInMonth;
-
-          return (
-            <div
-              key={i}
-              className={`flex flex-col items-center justify-center rounded-lg p-4 h-40 w-40 shadow-md relative hover:bg-zinc-700 transition-all cursor-pointer 
-                ${isPlaceholder ? "bg-zinc-800 opacity-50" : isSunday ? "bg-success" : "bg-zinc-800"}`}
-            >
-              {!isPlaceholder && (
-                <>
-                  <span className="absolute top-2 left-2 text-lg text-gray-300 tracking-wider anton-regular">
-                    {dayIndex}
-                  </span>
-                  <button
-                    className={`${isSunday ? "text-white" : "text-gray-300"} `}
-                  >
-                    <AddIcon size={24} />
-                  </button>
-                </>
-              )}
-            </div>
-          );
-        })}
+        <DaysOfWeek />
+        <Calendar
+          days={days}
+          handleDateClick={handleDateClick}
+          trainingSchedule={trainingSchedule}
+        />
       </main>
+
+      <AddTrainingModal
+        filteredTrainingList={filteredTrainingList}
+        handleTrainingSelect={handleTrainingSelect}
+        isModalOpen={isAddTrainingModalOpen}
+        loading={loading}
+        setIsModalOpen={setIsAddTrainingModalOpen}
+      />
+
+      <DetailsModal
+        fetchedWod={selectedTraining || {}}
+        isOpen={isDetailsModalOpen}
+        showChangeButton={true}
+        onChangeTraining={() => setIsAddTrainingModalOpen(true)}
+        onDeleteTraining={onDeleteTraining}
+        onOpenChange={setIsDetailsModalOpen}
+      />
     </div>
   );
-}
+};
 
 export default withAuth(Program);

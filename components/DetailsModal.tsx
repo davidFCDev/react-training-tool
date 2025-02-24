@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable prettier/prettier */
 
 import {
   Modal,
@@ -11,16 +10,17 @@ import {
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 
-interface DetailsModalProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  fetchedWod: any;
-}
+import { DeleteIcon, UpdateIcon } from "./icons";
+
+import { DetailsModalProps } from "@/types";
 
 const DetailsModal = ({
   isOpen,
   onOpenChange,
   fetchedWod,
+  showChangeButton = false,
+  onChangeTraining,
+  onDeleteTraining,
 }: DetailsModalProps) => {
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -64,10 +64,30 @@ const DetailsModal = ({
                   )}
               </div>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="flex justify-between">
               <Button color="danger" variant="light" onPress={onClose}>
                 Close
               </Button>
+              {showChangeButton && (
+                <div className="flex gap-4">
+                  <Button
+                    isIconOnly
+                    color="success"
+                    variant="ghost"
+                    onPress={onChangeTraining}
+                  >
+                    <UpdateIcon />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    color="danger"
+                    variant="ghost"
+                    onPress={onDeleteTraining}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </div>
+              )}
             </ModalFooter>
           </>
         )}
