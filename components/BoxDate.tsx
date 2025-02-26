@@ -30,7 +30,9 @@ const BoxDate = ({
     >
       {!isPlaceholder && (
         <>
-          <span className="absolute top-2 left-2 text-gray-300 tracking-wider anton-regular">
+          <span
+            className={`${isSunday ? "text-zinc-700" : "text-white"} tracking-wider anton-regular absolute top-2 left-2`}
+          >
             {dayIndex}
           </span>
           {training ? (

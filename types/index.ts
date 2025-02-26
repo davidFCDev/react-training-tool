@@ -30,6 +30,8 @@ export interface TrainingData {
   strength?: string;
   metcon?: string;
   accessory?: string;
+  type?: string;
+  time?: string;
 }
 
 export interface TrainingFormProps {

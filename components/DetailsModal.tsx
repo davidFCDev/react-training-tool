@@ -38,32 +38,38 @@ const DetailsModal = ({
             <Divider />
             <ModalBody>
               <div
-                className={`grid gap-6 py-6 ${
-                  Object.keys(fetchedWod).length > 3
-                    ? "grid-cols-1 sm:grid-cols-4"
-                    : "grid-cols-1 sm:grid-cols-2"
-                }`}
+                className="grid gap-6 py-6"
+                style={{
+                  gridTemplateColumns: `repeat(${Math.min(
+                    Object.entries(fetchedWod).filter(
+                      ([key, value]) =>
+                        key !== "type" && key !== "time" && value
+                    ).length,
+                    4
+                  )}, 1fr)`,
+                }}
               >
                 {Object.entries(fetchedWod)
-                  .filter(([key]) => key !== "type" && key !== "time")
-                  .map(([key, value]) =>
-                    value ? (
-                      <div
-                        key={key}
-                        className="p-4 rounded-lg shadow-md bg-content1"
-                      >
-                        <h3 className="text-lg font-bold uppercase text-left mb-3 text-gray-200">
-                          {key}
-                        </h3>
-                        <Divider />
-                        <pre className="whitespace-pre-wrap text-sm mt-3 text-gray-300">
-                          {String(value)}
-                        </pre>
-                      </div>
-                    ) : null
-                  )}
+                  .filter(
+                    ([key, value]) => key !== "type" && key !== "time" && value
+                  )
+                  .map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="p-4 rounded-lg shadow-md bg-content1"
+                    >
+                      <h3 className="text-lg font-bold uppercase text-left mb-3 text-gray-200">
+                        {key}
+                      </h3>
+                      <Divider />
+                      <pre className="whitespace-pre-wrap text-sm mt-3 text-gray-300">
+                        {String(value)}
+                      </pre>
+                    </div>
+                  ))}
               </div>
             </ModalBody>
+
             <ModalFooter className="flex justify-between">
               <Button color="danger" variant="light" onPress={onClose}>
                 Close
