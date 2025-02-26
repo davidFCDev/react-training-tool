@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
+  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 import { db } from "../firebase/firebase";
@@ -20,19 +22,45 @@ class DataService {
 
       return {
         id: doc.id,
-        date: data.date || "",
-        training: data.training || "",
+        training: data.training || {},
       };
     });
   }
 
-  async addDocument(collectionName: string, data: Record<string, any>) {
+  async getDocumentById(collectionName: string, id: string) {
     try {
-      const docRef = await addDoc(collection(db, collectionName), data);
+      const docRef = doc(db, collectionName, id);
+      const docSnap = await getDoc(docRef);
 
-      return docRef.id;
+      if (docSnap.exists()) {
+        console.log("📄 Document data:", docSnap.data());
+
+        return {
+          id: docSnap.id,
+          training: docSnap.data().training || {},
+        };
+      } else {
+        console.warn("❌ No such document!");
+
+        return null;
+      }
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error("Error fetching document by ID: ", e);
+      throw e;
+    }
+  }
+
+  async addDocumentWithId(
+    collectionName: string,
+    id: string,
+    training: Record<string, any>
+  ) {
+    try {
+      await setDoc(doc(db, collectionName, id), { training });
+
+      return id;
+    } catch (e) {
+      console.error("Error adding document with ID: ", e);
       throw e;
     }
   }
@@ -42,6 +70,22 @@ class DataService {
       await deleteDoc(doc(db, collectionName, id));
     } catch (e) {
       console.error("Error removing document: ", e);
+      throw e;
+    }
+  }
+
+  async updateDocument(
+    collectionName: string,
+    id: string,
+    updatedTraining: Record<string, any>
+  ) {
+    try {
+      await updateDoc(doc(db, collectionName, id), {
+        training: updatedTraining,
+      });
+      console.log("✅ Document updated successfully!");
+    } catch (e) {
+      console.error("Error updating document: ", e);
       throw e;
     }
   }

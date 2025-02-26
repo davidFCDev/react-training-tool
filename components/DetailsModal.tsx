@@ -11,62 +11,51 @@ import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 
 import { DeleteIcon, UpdateIcon } from "./icons";
+import InfoCard from "./InfoCard";
 
 import { DetailsModalProps } from "@/types";
 
 const DetailsModal = ({
   isOpen,
   onOpenChange,
-  fetchedWod,
+  fetchedWod = {},
   showChangeButton = false,
   onChangeTraining,
   onDeleteTraining,
+  onEditTraining,
 }: DetailsModalProps) => {
+  const { type, time, ...details } = fetchedWod;
+  const detailEntries = Object.entries(details).filter(([, value]) => value);
+
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent className="max-w-fit w-auto">
         {(onClose) => (
           <>
             <ModalHeader className="flex items-center justify-center gap-5">
-              {fetchedWod.time && (
+              {time && (
                 <p className="text-xs text-gray-400">
-                  <span className="text-gray-300">{fetchedWod.time}</span> min
+                  <span className="text-gray-300">{time}</span> min
                 </p>
               )}
-              <h2 className="text-2xl">{fetchedWod.type}</h2>
+              <h2 className="text-2xl">{type || "Workout"}</h2>
             </ModalHeader>
+
             <Divider />
+
             <ModalBody>
               <div
                 className="grid gap-6 py-6"
                 style={{
                   gridTemplateColumns: `repeat(${Math.min(
-                    Object.entries(fetchedWod).filter(
-                      ([key, value]) =>
-                        key !== "type" && key !== "time" && value
-                    ).length,
+                    detailEntries.length,
                     4
                   )}, 1fr)`,
                 }}
               >
-                {Object.entries(fetchedWod)
-                  .filter(
-                    ([key, value]) => key !== "type" && key !== "time" && value
-                  )
-                  .map(([key, value]) => (
-                    <div
-                      key={key}
-                      className="p-4 rounded-lg shadow-md bg-content1"
-                    >
-                      <h3 className="text-lg font-bold uppercase text-left mb-3 text-gray-200">
-                        {key}
-                      </h3>
-                      <Divider />
-                      <pre className="whitespace-pre-wrap text-sm mt-3 text-gray-300">
-                        {String(value)}
-                      </pre>
-                    </div>
-                  ))}
+                {detailEntries.map(([key, value]) => (
+                  <InfoCard key={key} content={String(value)} title={key} />
+                ))}
               </div>
             </ModalBody>
 
@@ -74,8 +63,20 @@ const DetailsModal = ({
               <Button color="danger" variant="light" onPress={onClose}>
                 Close
               </Button>
+
               {showChangeButton && (
                 <div className="flex gap-4">
+                  <Button
+                    isIconOnly
+                    variant="shadow"
+                    onPress={() => {
+                      onEditTraining(fetchedWod);
+                      onClose();
+                    }}
+                  >
+                    ✏️
+                  </Button>
+
                   <Button
                     isIconOnly
                     color="success"
@@ -84,6 +85,7 @@ const DetailsModal = ({
                   >
                     <UpdateIcon />
                   </Button>
+
                   <Button
                     isIconOnly
                     color="danger"

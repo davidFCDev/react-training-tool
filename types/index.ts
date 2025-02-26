@@ -52,11 +52,12 @@ export interface ModalTrainingProps {
 
 export interface DetailsModalProps {
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: () => void;
   fetchedWod: Record<string, any>;
   showChangeButton?: boolean;
   onChangeTraining?: () => void;
   onDeleteTraining?: () => void;
+  onEditTraining: (training: Record<string, any>) => void;
 }
 
 export interface AddTrainingModalProps {

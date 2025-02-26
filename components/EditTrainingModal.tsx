@@ -8,108 +8,131 @@ import {
   ModalHeader,
 } from "@heroui/modal";
 import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
+import { Divider } from "@nextui-org/divider";
+import { Input, Textarea } from "@nextui-org/input";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 
-import { updateFavoriteAsync } from "@/redux/favoritesReducer";
-import { AppDispatch } from "@/redux/store";
-
-interface Training {
-  id: string;
-  type: string;
-  time: string;
-  warmup: string;
-  strength: string;
-  metcon: string;
-  accessory: string;
-}
-
-interface EditTrainingModalProps {
+interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  trainingToEdit: Training | null;
+  training: Record<string, any>;
+  onSave: (training: Record<string, any>) => void;
 }
 
-const EditTrainingModal: React.FC<EditTrainingModalProps> = ({
+const EditTrainingModal = ({
   isOpen,
+  training,
   onClose,
-  trainingToEdit,
-}) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const [trainingData, setTrainingData] = useState<Omit<Training, "id">>({
-    type: "",
-    time: "",
-    warmup: "",
-    strength: "",
-    metcon: "",
-    accessory: "",
-  });
+  onSave,
+}: EditModalProps) => {
+  const [formData, setFormData] = useState<Record<string, any>>({});
 
   useEffect(() => {
-    if (trainingToEdit) {
-      const { id, ...rest } = trainingToEdit;
+    setFormData(training || {});
+  }, [training]);
 
-      setTrainingData(rest);
-    }
-  }, [trainingToEdit]);
-
-  const handleChange = (field: keyof Training, value: string) => {
-    setTrainingData((prev) => ({
+  const handleChange = (key: string, value: string) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value,
+      [key]: value,
     }));
   };
 
-  const handleSave = async () => {
-    if (trainingToEdit) {
-      await dispatch(
-        updateFavoriteAsync({
-          collectionName: "trainings",
-          updatedTraining: {
-            id: trainingToEdit.id,
-            training: trainingData.type,
-            ...trainingData,
-          },
-        })
-      );
-      onClose();
-    }
+  const handleSubmit = () => {
+    const cleanedData = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => [
+        key,
+        typeof value === "string" ? value.trim() : value,
+      ])
+    );
+
+    onSave(cleanedData);
+    onClose();
   };
 
-  if (!trainingToEdit) return null;
+  const detailEntries = Object.entries(formData).filter(
+    ([key]) => key !== "type" && key !== "time"
+  );
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onClose}>
-      <ModalContent>
-        <ModalHeader>Editar Entrenamiento</ModalHeader>
+    <Modal
+      hideCloseButton
+      backdrop="blur"
+      isOpen={isOpen}
+      onOpenChange={onClose}
+    >
+      <ModalContent className="max-w-4xl w-auto">
+        <ModalHeader className="text-2xl font-bold flex items-center justify-between py-4">
+          <h2 className="text-success">
+            Edit <span className="text-zinc-200">Training</span>
+          </h2>
+          <div className="flex gap-4">
+            <div className="flex gap-2 items-center">
+              <label className="text-sm font-medium uppercase" htmlFor="type">
+                Type
+              </label>
+              <Input
+                color="success"
+                id="type"
+                name="type"
+                placeholder="Type"
+                value={formData.type || ""}
+                variant="faded"
+                onChange={(e) => handleChange("type", e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2 items-center">
+              <label className="text-sm font-medium uppercase" htmlFor="time">
+                Time
+              </label>
+              <Input
+                color="success"
+                id="time"
+                name="time"
+                placeholder="Time"
+                value={formData.time || ""}
+                variant="faded"
+                onChange={(e) => handleChange("time", e.target.value)}
+              />
+            </div>
+          </div>
+        </ModalHeader>
+
+        <Divider />
         <ModalBody>
-          {Object.entries(trainingData).map(([key, value]) => (
-            <Input
-              key={key}
-              fullWidth
-              aria-label={key}
-              label={key.charAt(0).toUpperCase() + key.slice(1)}
-              placeholder={`Edita ${key}`}
-              value={value}
-              onChange={(e) =>
-                handleChange(key as keyof Training, e.target.value)
-              }
-            />
-          ))}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="danger" variant="light" onPress={onClose}>
-            Cancelar
-          </Button>
-          <Button
-            color="success"
-            disabled={Object.values(trainingData).some(
-              (value) => !value.trim()
-            )}
-            onPress={handleSave}
+          <div
+            className="grid gap-6 py-6"
+            style={{
+              gridTemplateColumns: `repeat(${detailEntries.length}, 1fr)`,
+            }}
           >
-            Guardar cambios
+            {detailEntries.map(([key, value]) => (
+              <div key={key} className="flex flex-col gap-2">
+                <label className="text-sm font-bold uppercase" htmlFor={key}>
+                  {key}
+                </label>
+                <Textarea
+                  color="success"
+                  id={key}
+                  maxRows={7}
+                  minRows={7}
+                  name={key}
+                  placeholder={`Edit ${key}`}
+                  value={String(value || "")}
+                  variant="faded"
+                  onChange={(e) => handleChange(key, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+        </ModalBody>
+        <Divider />
+        <ModalFooter className="py-4">
+          <Button color="danger" variant="light" onPress={onClose}>
+            Cancel
+          </Button>
+          <Button color="success" onPress={handleSubmit}>
+            Save
           </Button>
         </ModalFooter>
       </ModalContent>

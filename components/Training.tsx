@@ -1,14 +1,15 @@
 "use client";
-/* eslint-disable prettier/prettier */
 
-import { Tooltip } from "@heroui/tooltip";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
+import { useState } from "react";
 
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import DetailsModal from "./DetailsModal";
+import EditTrainingModal from "./EditTrainingModal";
 import { ArrowsPointing, DeleteIcon, LoveIcon } from "./icons";
+import TooltipButton from "./TooltipButton";
 
 import useModals from "@/hooks/useModals";
 import useSaveTraining from "@/hooks/useSaveTraining";
@@ -20,13 +21,31 @@ export const Training = ({
   isNotFavorite,
   id,
 }: TrainingProps) => {
-  const { isSaving, saveTraining, deleteTraining } = useSaveTraining();
+  const { isSaving, saveTraining, deleteTraining, updateTraining } =
+    useSaveTraining();
   const { isModalOpen, isTrainingModalOpen, openModal, closeModal } =
     useModals();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [trainingToEdit, setTrainingToEdit] = useState<Record<string, any>>({});
+
+  const handleEditTraining = (training: Record<string, any>) => {
+    setTrainingToEdit(training);
+    setIsEditModalOpen(true);
+  };
 
   const handleDelete = () => {
     deleteTraining(id);
     closeModal("delete");
+  };
+
+  const handleSave = () => {
+    saveTraining(fetchedWod, () => setFetchedWod(null));
+  };
+
+  const handleUpdateTraining = async (updatedTraining: Record<string, any>) => {
+    await updateTraining(id, updatedTraining);
+    setFetchedWod(updatedTraining);
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -53,55 +72,51 @@ export const Training = ({
             {fetchedWod.type}
           </h2>
           <div className="flex gap-2">
-            <Tooltip
-              className="py-2 px-4 bg-zinc-700 text-white"
-              closeDelay={0}
-              content="Save the workout"
-              delay={0}
-              motionProps={{
-                variants: {
-                  exit: {
-                    opacity: 0,
-                    transition: {
-                      duration: 0.1,
-                      ease: "easeIn",
-                    },
-                  },
-                  enter: {
-                    opacity: 1,
-                    transition: {
-                      duration: 0.15,
-                      ease: "easeOut",
-                    },
-                  },
-                },
-              }}
-              showArrow={true}
-            >
-              <Button
-                isIconOnly
+            {isNotFavorite ? (
+              <TooltipButton
                 color="danger"
-                disabled={isNotFavorite && isSaving}
+                disabled={isSaving}
+                icon={<LoveIcon />}
+                tooltipText="Save the workout"
+                onClick={handleSave}
+              />
+            ) : (
+              <TooltipButton
+                color="danger"
+                icon={<DeleteIcon />}
+                tooltipText="Delete workout"
+                onClick={() => openModal("delete")}
+              />
+            )}
+            {/* {!isNotFavorite && (
+              <TooltipButton
+                icon={<ArrowsPointing />}
+                tooltipText="Show details"
                 variant="light"
-                onPress={() =>
-                  isNotFavorite
-                    ? saveTraining(JSON.stringify(fetchedWod, null, 2), () =>
-                        setFetchedWod(null)
-                      )
-                    : openModal("delete")
-                }
-              >
-                {isNotFavorite ? <LoveIcon /> : <DeleteIcon />}
-              </Button>
-            </Tooltip>
+                onClick={() => openModal("details")}
+              />
+            )}
             {!isNotFavorite && (
-              <Button
-                isIconOnly
-                variant="light"
-                onPress={() => openModal("details")}
-              >
-                <ArrowsPointing />
-              </Button>
+              <TooltipButton
+                icon="✏️"
+                tooltipText="Edit workout"
+                onClick={() => handleEditTraining(fetchedWod)}
+              />
+            )} */}
+            {!isNotFavorite && (
+              <>
+                <TooltipButton
+                  icon={<ArrowsPointing />}
+                  tooltipText="Show details"
+                  variant="light"
+                  onClick={() => openModal("details")}
+                />
+                <TooltipButton
+                  icon="✏️"
+                  tooltipText="Edit workout"
+                  onClick={() => handleEditTraining(fetchedWod)}
+                />
+              </>
             )}
           </div>
         </CardHeader>
@@ -132,12 +147,19 @@ export const Training = ({
       <DetailsModal
         fetchedWod={fetchedWod}
         isOpen={isTrainingModalOpen}
+        onEditTraining={handleEditTraining}
         onOpenChange={() => closeModal("details")}
       />
       <ConfirmDeleteModal
         isOpen={isModalOpen}
         onClose={() => closeModal("delete")}
         onConfirm={handleDelete}
+      />
+      <EditTrainingModal
+        isOpen={isEditModalOpen}
+        training={trainingToEdit}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleUpdateTraining}
       />
     </>
   );
