@@ -33,17 +33,24 @@ const Program: React.FC = () => {
 
   return (
     <div className="w-full min-w-80 flex flex-col items-center justify-center p-4">
-      <header className="mb-6">
-        <h1 className="title">Program</h1>
-        <p className="subtitle">Create your own training program</p>
+      <header className="mb-6 text-center">
+        <h1 className="text-2xl font-bold">Program</h1>
+        <p className="text-sm text-gray-600">
+          Create your own training program
+        </p>
       </header>
 
       <div className="mb-4 flex gap-4">
         <MonthSelector
-          {...{ selectedMonth, setSelectedMonth, monthsWithTraining }}
+          monthsWithTraining={monthsWithTraining}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
         />
 
-        <YearSelector {...{ selectedYear, setSelectedYear }} />
+        <YearSelector
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+        />
       </div>
 
       <main className="grid grid-cols-7 gap-2 w-full">
@@ -55,22 +62,26 @@ const Program: React.FC = () => {
         />
       </main>
 
-      <AddTrainingModal
-        filteredTrainingList={filteredTrainingList}
-        handleTrainingSelect={handleTrainingSelect}
-        isModalOpen={isAddTrainingModalOpen}
-        loading={loading}
-        setIsModalOpen={setIsAddTrainingModalOpen}
-      />
+      {isAddTrainingModalOpen && (
+        <AddTrainingModal
+          filteredTrainingList={filteredTrainingList}
+          handleTrainingSelect={handleTrainingSelect}
+          isModalOpen={isAddTrainingModalOpen}
+          loading={loading}
+          setIsModalOpen={setIsAddTrainingModalOpen}
+        />
+      )}
 
-      <DetailsModal
-        fetchedWod={selectedTraining || {}}
-        isOpen={isDetailsModalOpen}
-        showChangeButton={true}
-        onChangeTraining={() => setIsAddTrainingModalOpen(true)}
-        onDeleteTraining={onDeleteTraining}
-        onOpenChange={setIsDetailsModalOpen}
-      />
+      {isDetailsModalOpen && (
+        <DetailsModal
+          showChangeButton
+          fetchedWod={selectedTraining ?? {}}
+          isOpen={isDetailsModalOpen}
+          onChangeTraining={() => setIsAddTrainingModalOpen(true)}
+          onDeleteTraining={onDeleteTraining}
+          onOpenChange={setIsDetailsModalOpen}
+        />
+      )}
     </div>
   );
 };

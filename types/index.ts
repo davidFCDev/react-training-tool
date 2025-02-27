@@ -16,6 +16,21 @@ export interface TrainingData {
   accessory?: string;
   type?: string;
   time?: string;
+  observations?: string;
+}
+
+export interface Training {
+  id: string;
+  training: TrainingData;
+  date: string;
+  parsedTraining: {
+    type: string;
+    time: string;
+  };
+}
+
+export interface TrainingState {
+  favoriteList: Training[];
 }
 
 export interface TrainingProps {
@@ -25,13 +40,11 @@ export interface TrainingProps {
   id: string;
 }
 
-export interface TrainingData {
-  warmup?: string;
-  strength?: string;
-  metcon?: string;
-  accessory?: string;
-  type?: string;
-  time?: string;
+export interface EditModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  training: Record<string, any>;
+  onSave: (training: Record<string, any>) => void;
 }
 
 export interface TrainingFormProps {
@@ -53,23 +66,23 @@ export interface ModalTrainingProps {
 export interface DetailsModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
-  fetchedWod: Record<string, any>;
+  fetchedWod: TrainingData;
   showChangeButton?: boolean;
   onChangeTraining?: () => void;
   onDeleteTraining?: () => void;
-  onEditTraining: (training: Record<string, any>) => void;
+  onEditTraining: (training: TrainingData) => void;
 }
 
 export interface AddTrainingModalProps {
   isModalOpen: boolean;
-  setIsModalOpen: (arg0: boolean) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
   loading: boolean;
-  filteredTrainingList: any[];
-  handleTrainingSelect: (arg0: string) => void;
+  filteredTrainingList: Training[];
+  handleTrainingSelect: (trainingId: string) => void;
 }
 
 export interface TrainingScheduleItem {
   id: string;
   date: string;
-  training: any;
+  training: TrainingData;
 }

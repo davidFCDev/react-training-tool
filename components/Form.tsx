@@ -48,7 +48,13 @@ export function TrainingForm({
         </p>
       </div>
       <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-        <Select className="w-full" label="Select training" name="wod-type">
+        <Select
+          className="w-full"
+          color="default"
+          label="Select training"
+          name="wod-type"
+          variant="faded"
+        >
           {training_type.map((type) => (
             <SelectItem key={type} aria-label="wod-type">
               {type}
@@ -58,7 +64,12 @@ export function TrainingForm({
       </div>
 
       <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-        <Select className="w-full" label="Select max duration" name="duration">
+        <Select
+          className="w-full"
+          label="Select max duration"
+          name="duration"
+          variant="faded"
+        >
           {max_duration.map((duration) => (
             <SelectItem key={duration} aria-label="duration">
               {duration}
@@ -72,6 +83,7 @@ export function TrainingForm({
           label="Observations"
           name="observations"
           placeholder="Enter any observations here"
+          variant="faded"
         />
       </div>
       <div className="flex gap-2 mt-4">

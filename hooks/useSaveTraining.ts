@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
@@ -27,11 +28,16 @@ const useSaveTraining = () => {
       setIsSaving(true);
       setSaveError(null);
       const id = nanoid();
+      const date = new Date().toISOString();
+
+      const newTraining = { id, date, training };
 
       try {
-        await dataService.addDocumentWithId("favorites", id, training);
-        dispatch(addFavorite({ id, training }));
+        await dataService.addDocumentWithId("favorites", id, newTraining);
+        dispatch(addFavorite(newTraining));
         toast.success("Workout saved successfully.");
+        console.log("📄 Document added:", newTraining);
+
         if (onSuccess) onSuccess();
       } catch {
         setSaveError("Error saving the workout. Please try again later.");
@@ -83,9 +89,15 @@ const useSaveTraining = () => {
       setIsSaving(true);
       setSaveError(null);
 
+      const updatedData = {
+        id,
+        date: new Date().toISOString(),
+        training: updatedTraining,
+      };
+
       try {
-        await dataService.updateDocument("favorites", id, updatedTraining);
-        dispatch(updateFavorite({ id, training: updatedTraining }));
+        await dataService.updateDocument("favorites", id, updatedData);
+        dispatch(updateFavorite(updatedData));
         toast.success("Workout updated successfully.");
       } catch {
         setSaveError("Error updating the workout. Please try again later.");

@@ -23,7 +23,7 @@ const Calendar = ({
           isSunday: boolean;
           date: string;
         }) => {
-          const training = trainingSchedule[date];
+          const training = trainingSchedule[date]?.training || null;
 
           return (
             <BoxDate

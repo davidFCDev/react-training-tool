@@ -13,22 +13,24 @@ import TooltipButton from "./TooltipButton";
 
 import useModals from "@/hooks/useModals";
 import useSaveTraining from "@/hooks/useSaveTraining";
-import { TrainingProps } from "@/types";
+import { TrainingData, TrainingProps } from "@/types";
 
 export const Training = ({
   fetchedWod,
   setFetchedWod,
-  isNotFavorite,
+  isNotFavorite = false,
   id,
 }: TrainingProps) => {
   const { isSaving, saveTraining, deleteTraining, updateTraining } =
     useSaveTraining();
   const { isModalOpen, isTrainingModalOpen, openModal, closeModal } =
     useModals();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [trainingToEdit, setTrainingToEdit] = useState<Record<string, any>>({});
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [trainingToEdit, setTrainingToEdit] = useState<TrainingData | null>(
+    null
+  );
 
-  const handleEditTraining = (training: Record<string, any>) => {
+  const handleEditTraining = (training: TrainingData) => {
     setTrainingToEdit(training);
     setIsEditModalOpen(true);
   };
@@ -42,7 +44,7 @@ export const Training = ({
     saveTraining(fetchedWod, () => setFetchedWod(null));
   };
 
-  const handleUpdateTraining = async (updatedTraining: Record<string, any>) => {
+  const handleUpdateTraining = async (updatedTraining: TrainingData) => {
     await updateTraining(id, updatedTraining);
     setFetchedWod(updatedTraining);
     setIsEditModalOpen(false);
@@ -61,7 +63,7 @@ export const Training = ({
               Back
             </Button>
           ) : (
-            fetchedWod.time && (
+            fetchedWod?.time && (
               <p className="text-sm text-gray-400">
                 Time: <span className="text-gray-300">{fetchedWod.time}</span>{" "}
                 min
@@ -69,7 +71,7 @@ export const Training = ({
             )
           )}
           <h2 className="font-semibold text-xl text-success-500 flex-grow text-center">
-            {fetchedWod.type}
+            {fetchedWod?.type || "Training"}
           </h2>
           <div className="flex gap-2">
             {isNotFavorite ? (
@@ -88,21 +90,6 @@ export const Training = ({
                 onClick={() => openModal("delete")}
               />
             )}
-            {/* {!isNotFavorite && (
-              <TooltipButton
-                icon={<ArrowsPointing />}
-                tooltipText="Show details"
-                variant="light"
-                onClick={() => openModal("details")}
-              />
-            )}
-            {!isNotFavorite && (
-              <TooltipButton
-                icon="✏️"
-                tooltipText="Edit workout"
-                onClick={() => handleEditTraining(fetchedWod)}
-              />
-            )} */}
             {!isNotFavorite && (
               <>
                 <TooltipButton
@@ -122,12 +109,14 @@ export const Training = ({
         </CardHeader>
         <Divider />
         <CardBody
-          className={`grid grid-cols-1 sm:grid-cols-2 gap-6 py-4 ${!isNotFavorite ? "mb-4 max-h-40 overflow-hidden relative" : ""}`}
+          className={`grid grid-cols-1 sm:grid-cols-2 gap-6 py-4 ${
+            !isNotFavorite ? "mb-4 max-h-40 overflow-hidden relative" : ""
+          }`}
         >
           {!isNotFavorite && (
             <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none" />
           )}
-          {Object.entries(fetchedWod)
+          {Object.entries(fetchedWod || {})
             .filter(([key]) => key !== "type" && key !== "time")
             .map(([key, value]) =>
               value ? (
@@ -137,7 +126,7 @@ export const Training = ({
                   </h3>
                   <Divider />
                   <pre className="whitespace-pre-wrap text-sm mt-3 text-gray-300">
-                    {value}
+                    {String(value)}
                   </pre>
                 </div>
               ) : null
@@ -155,12 +144,14 @@ export const Training = ({
         onClose={() => closeModal("delete")}
         onConfirm={handleDelete}
       />
-      <EditTrainingModal
-        isOpen={isEditModalOpen}
-        training={trainingToEdit}
-        onClose={() => setIsEditModalOpen(false)}
-        onSave={handleUpdateTraining}
-      />
+      {trainingToEdit && (
+        <EditTrainingModal
+          isOpen={isEditModalOpen}
+          training={trainingToEdit}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleUpdateTraining}
+        />
+      )}
     </>
   );
 };

@@ -11,7 +11,7 @@ interface Training {
 }
 
 interface TrainingSchedule {
-  [date: string]: Record<string, any>;
+  [date: string]: Training;
 }
 
 const useTrainingSchedule = () => {
@@ -32,7 +32,7 @@ const useTrainingSchedule = () => {
         await dataService.getCollection("programming");
       const formattedSchedule: TrainingSchedule = scheduleData.reduce(
         (acc: TrainingSchedule, item: Training) => {
-          if (item.date) acc[item.date] = { ...item.training, date: item.date };
+          if (item.date) acc[item.date] = item;
 
           return acc;
         },
@@ -52,8 +52,13 @@ const useTrainingSchedule = () => {
     training: Record<string, any>
   ): Promise<void> => {
     try {
-      await dataService.addDocument("programming", { date, training });
-      setTrainingSchedule((prev) => ({ ...prev, [date]: training }));
+      const id = crypto.randomUUID();
+
+      await dataService.addDocumentWithId("programming", id, training, date);
+      setTrainingSchedule((prev) => ({
+        ...prev,
+        [date]: { id, date, training },
+      }));
       toast.success("Training assigned successfully!");
     } catch (error) {
       toast.error("Failed to assign training.");
@@ -63,20 +68,21 @@ const useTrainingSchedule = () => {
 
   const removeTraining = async (date: string): Promise<void> => {
     try {
-      const querySnapshot: Training[] =
-        await dataService.getCollection("programming");
-      const docToDelete = querySnapshot.find((item) => item.date === date);
+      const training = trainingSchedule[date];
 
-      if (docToDelete)
-        await dataService.deleteDocument("programming", docToDelete.id);
-      setTrainingSchedule((prev) => {
-        const updatedSchedule = { ...prev };
+      if (training) {
+        await dataService.deleteDocument("programming", training.id);
+        setTrainingSchedule((prev) => {
+          const updatedSchedule = { ...prev };
 
-        delete updatedSchedule[date];
+          delete updatedSchedule[date];
 
-        return updatedSchedule;
-      });
-      toast.success("Training removed successfully!");
+          return updatedSchedule;
+        });
+        toast.success("Training removed successfully!");
+      } else {
+        toast.error("No training found for this date.");
+      }
     } catch (error) {
       toast.error("Failed to remove training.");
       console.error("Error removing training:", error);

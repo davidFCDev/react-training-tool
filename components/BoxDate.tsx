@@ -37,12 +37,8 @@ const BoxDate = ({
           </span>
           {training ? (
             <div>
-              <p className="text-white text-center">
-                {training.parsedTraining.type}
-              </p>
-              <p className="font-light text-xs">
-                {training.parsedTraining.time} mins
-              </p>
+              <p className="text-white text-center">{training.type}</p>
+              <p className="font-light text-xs">{training.time} mins</p>
             </div>
           ) : (
             <button className={`${isSunday ? "text-zinc-700" : "text-white"}`}>

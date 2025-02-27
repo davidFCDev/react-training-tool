@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useMemo, useState } from "react";
 
 import useDateSelector from "@/hooks/useDateSelector";
@@ -52,35 +53,42 @@ const useProgram = () => {
 
     const training = trainingSchedule[date];
 
-    training?.parsedTraining
-      ? openDetailsModal(training.parsedTraining)
-      : openAddTrainingModal();
+    training ? openDetailsModal(training) : openAddTrainingModal();
   };
 
   const openAddTrainingModal = () => setIsAddTrainingModalOpen(true);
 
   const openDetailsModal = (training: any) => {
-    setSelectedTraining(training);
+    setSelectedTraining(training.training);
     setIsDetailsModalOpen(true);
   };
 
   const handleTrainingSelect = async (trainingId: string) => {
     if (!selectedDate) return;
-    const selectedTraining =
-      filteredTrainingList.find((t) => t?.id === trainingId) ?? {};
 
-    await addTraining(selectedDate, selectedTraining);
-    closeModals();
+    const selectedTraining = filteredTrainingList.find(
+      (t) => t?.id === trainingId
+    );
+
+    if (selectedTraining && selectedTraining.training) {
+      await addTraining(selectedDate, selectedTraining.training);
+      closeModals();
+    } else {
+      console.warn("No valid training found for the selected ID.");
+    }
   };
 
   const onDeleteTraining = async () => {
-    if (selectedDate) await removeTraining(selectedDate);
-    closeModals();
+    if (selectedDate) {
+      await removeTraining(selectedDate);
+      closeModals();
+    }
   };
 
   const closeModals = () => {
     setIsAddTrainingModalOpen(false);
     setIsDetailsModalOpen(false);
+    setSelectedTraining(null);
   };
 
   const getMonthsWithTraining = (year: number) => {

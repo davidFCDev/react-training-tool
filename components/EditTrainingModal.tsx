@@ -10,14 +10,9 @@ import {
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Input, Textarea } from "@nextui-org/input";
-import { useEffect, useState } from "react";
 
-interface EditModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  training: Record<string, any>;
-  onSave: (training: Record<string, any>) => void;
-}
+import { useEditTraining } from "@/hooks/useEditTraining";
+import { EditModalProps } from "@/types";
 
 const EditTrainingModal = ({
   isOpen,
@@ -25,34 +20,12 @@ const EditTrainingModal = ({
   onClose,
   onSave,
 }: EditModalProps) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
-
-  useEffect(() => {
-    setFormData(training || {});
-  }, [training]);
-
-  const handleChange = (key: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const handleSubmit = () => {
-    const cleanedData = Object.fromEntries(
-      Object.entries(formData).map(([key, value]) => [
-        key,
-        typeof value === "string" ? value.trim() : value,
-      ])
-    );
-
-    onSave(cleanedData);
-    onClose();
-  };
-
-  const detailEntries = Object.entries(formData).filter(
-    ([key]) => key !== "type" && key !== "time"
-  );
+  const { formData, handleChange, handleSubmit, detailEntries } =
+    useEditTraining({
+      training,
+      onSave,
+      onClose,
+    });
 
   return (
     <Modal
@@ -62,7 +35,7 @@ const EditTrainingModal = ({
       onOpenChange={onClose}
     >
       <ModalContent className="max-w-4xl w-auto">
-        <ModalHeader className="text-2xl font-bold flex items-center justify-between py-4">
+        <ModalHeader className="text-2xl font-bold flex items-center justify-between py-6">
           <h2 className="text-success">
             Edit <span className="text-zinc-200">Training</span>
           </h2>
@@ -72,7 +45,7 @@ const EditTrainingModal = ({
                 Type
               </label>
               <Input
-                color="success"
+                color="default"
                 id="type"
                 name="type"
                 placeholder="Type"
@@ -86,7 +59,7 @@ const EditTrainingModal = ({
                 Time
               </label>
               <Input
-                color="success"
+                color="default"
                 id="time"
                 name="time"
                 placeholder="Time"
@@ -112,10 +85,10 @@ const EditTrainingModal = ({
                   {key}
                 </label>
                 <Textarea
-                  color="success"
+                  color="default"
                   id={key}
-                  maxRows={7}
-                  minRows={7}
+                  maxRows={10}
+                  minRows={10}
                   name={key}
                   placeholder={`Edit ${key}`}
                   value={String(value || "")}
