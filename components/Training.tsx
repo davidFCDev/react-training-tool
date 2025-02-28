@@ -82,7 +82,9 @@ export const Training = ({
             />
           )}
           <div className="flex items-center gap-4">
-            <h2 className="font-semibold text-2xl text-success-500 flex-grow text-center anton-regular tracking-wider uppercase">
+            <h2
+              className={`${isNotFavorite ? "text-2xl" : "text-lg"} font-semibold text-success-500 flex-grow text-center anton-regular tracking-wider uppercase`}
+            >
               {fetchedWod?.type || "Training"}
             </h2>
             {fetchedWod?.time && (
