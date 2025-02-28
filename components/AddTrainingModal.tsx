@@ -31,7 +31,7 @@ export const AddTrainingModal = ({
             >
               {filteredTrainingList.map((training) => (
                 <SelectItem key={training.id} value={training.id}>
-                  {`${training.parsedTraining.type} - ${training.parsedTraining.time} mins`}
+                  {`${training.training.type} - ${training.training.time} mins`}
                 </SelectItem>
               ))}
             </Select>

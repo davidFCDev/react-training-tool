@@ -9,7 +9,7 @@ export const FilteredTrainingList = ({
   trainingList,
 }: FilteredTrainingListProps) => {
   return (
-    <div className="grid grid-cols-2 gap-4 w-full">
+    <div className="grid grid-cols-3 gap-4 w-full">
       {trainingList.length > 0 ? (
         trainingList.map((training) => {
           return (

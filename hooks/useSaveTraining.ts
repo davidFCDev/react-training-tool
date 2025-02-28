@@ -10,15 +10,19 @@ import {
 } from "@/redux/favoritesReducer";
 import { useAppDispatch } from "@/redux/store";
 import DataService from "@/service/data.service";
+import { TrainingData } from "@/types";
 
 const useSaveTraining = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [trainingToEdit, setTrainingToEdit] = useState<TrainingData | null>(
+    null
+  );
   const dispatch = useAppDispatch();
   const dataService = new DataService();
 
   const saveTraining = useCallback(
-    async (training: Record<string, any>, onSuccess?: () => void) => {
+    async (training: TrainingData, onSuccess?: () => void) => {
       if (!training || Object.keys(training).length === 0) {
         toast.error("Cannot save an empty workout.");
 
@@ -27,20 +31,17 @@ const useSaveTraining = () => {
 
       setIsSaving(true);
       setSaveError(null);
+
       const id = nanoid();
       const date = new Date().toISOString();
 
-      const newTraining = { id, date, training };
-
       try {
-        await dataService.addDocumentWithId("favorites", id, newTraining);
-        dispatch(addFavorite(newTraining));
+        await dataService.addDocumentWithId("favorites", id, training, date);
+        dispatch(addFavorite({ id, date, training }));
         toast.success("Workout saved successfully.");
-        console.log("📄 Document added:", newTraining);
-
-        if (onSuccess) onSuccess();
+        onSuccess?.();
       } catch {
-        setSaveError("Error saving the workout. Please try again later.");
+        setSaveError("Error saving workout.");
         toast.error("Failed to save workout.");
       } finally {
         setIsSaving(false);
@@ -65,7 +66,7 @@ const useSaveTraining = () => {
         dispatch(removeFavorite(id));
         toast.success("Workout removed successfully.");
       } catch {
-        setSaveError("Error removing the workout. Please try again later.");
+        setSaveError("Error removing workout.");
         toast.error("Failed to remove workout.");
       } finally {
         setIsSaving(false);
@@ -75,12 +76,8 @@ const useSaveTraining = () => {
   );
 
   const updateTraining = useCallback(
-    async (id: string, updatedTraining: Record<string, any>) => {
-      if (
-        !id ||
-        !updatedTraining ||
-        Object.keys(updatedTraining).length === 0
-      ) {
+    async (id: string, training: TrainingData) => {
+      if (!id || !training || Object.keys(training).length === 0) {
         toast.error("Invalid workout data.");
 
         return;
@@ -89,18 +86,14 @@ const useSaveTraining = () => {
       setIsSaving(true);
       setSaveError(null);
 
-      const updatedData = {
-        id,
-        date: new Date().toISOString(),
-        training: updatedTraining,
-      };
+      const updatedData = { date: new Date().toISOString(), training };
 
       try {
         await dataService.updateDocument("favorites", id, updatedData);
-        dispatch(updateFavorite(updatedData));
+        dispatch(updateFavorite({ id, ...updatedData }));
         toast.success("Workout updated successfully.");
       } catch {
-        setSaveError("Error updating the workout. Please try again later.");
+        setSaveError("Error updating workout.");
         toast.error("Failed to update workout.");
       } finally {
         setIsSaving(false);
@@ -115,6 +108,8 @@ const useSaveTraining = () => {
     saveTraining,
     deleteTraining,
     updateTraining,
+    trainingToEdit,
+    setTrainingToEdit,
   };
 };
 

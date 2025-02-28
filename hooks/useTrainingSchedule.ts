@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import DataService from "@/service/data.service";
-
-interface Training {
-  id: string;
-  date: string;
-  training: Record<string, any>;
-}
+import { Training } from "@/types";
 
 interface TrainingSchedule {
   [date: string]: Training;
@@ -28,8 +23,13 @@ const useTrainingSchedule = () => {
   const fetchSchedule = async (): Promise<void> => {
     setLoading(true);
     try {
-      const scheduleData: Training[] =
-        await dataService.getCollection("programming");
+      const scheduleData: Training[] = (
+        await dataService.getCollection("programming")
+      ).map((item: any) => ({
+        id: item.id,
+        date: item.date,
+        training: item.training,
+      }));
       const formattedSchedule: TrainingSchedule = scheduleData.reduce(
         (acc: TrainingSchedule, item: Training) => {
           if (item.date) acc[item.date] = item;

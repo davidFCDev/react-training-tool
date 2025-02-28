@@ -34,10 +34,8 @@ const Program: React.FC = () => {
   return (
     <div className="w-full min-w-80 flex flex-col items-center justify-center p-4">
       <header className="mb-6 text-center">
-        <h1 className="text-2xl font-bold">Program</h1>
-        <p className="text-sm text-gray-600">
-          Create your own training program
-        </p>
+        <h1 className="title">Program</h1>
+        <p className="subtitle">Create your own training program</p>
       </header>
 
       <div className="mb-4 flex gap-4">
@@ -64,7 +62,9 @@ const Program: React.FC = () => {
 
       {isAddTrainingModalOpen && (
         <AddTrainingModal
-          filteredTrainingList={filteredTrainingList}
+          filteredTrainingList={filteredTrainingList.filter(
+            (training) => training !== null
+          )}
           handleTrainingSelect={handleTrainingSelect}
           isModalOpen={isAddTrainingModalOpen}
           loading={loading}
@@ -79,6 +79,7 @@ const Program: React.FC = () => {
           isOpen={isDetailsModalOpen}
           onChangeTraining={() => setIsAddTrainingModalOpen(true)}
           onDeleteTraining={onDeleteTraining}
+          onEditTraining={(training) => console.log("Edit training", training)}
           onOpenChange={setIsDetailsModalOpen}
         />
       )}

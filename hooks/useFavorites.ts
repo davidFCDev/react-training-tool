@@ -18,8 +18,13 @@ const useFavorites = () => {
       setLoading(true);
       const dataService = new DataService();
       const data = await dataService.getCollection("favorites");
+      const transformedData = data.map((item: any) => ({
+        id: item.id,
+        training: item.training || "",
+        date: item.date || new Date().toISOString(),
+      }));
 
-      dispatch(setFavorites(data));
+      dispatch(setFavorites(transformedData));
       setLoading(false);
     };
 

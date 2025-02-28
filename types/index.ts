@@ -23,10 +23,6 @@ export interface Training {
   id: string;
   training: TrainingData;
   date: string;
-  parsedTraining: {
-    type: string;
-    time: string;
-  };
 }
 
 export interface TrainingState {
@@ -65,7 +61,7 @@ export interface ModalTrainingProps {
 
 export interface DetailsModalProps {
   isOpen: boolean;
-  onOpenChange: () => void;
+  onOpenChange: (isOpen: boolean) => void;
   fetchedWod: TrainingData;
   showChangeButton?: boolean;
   onChangeTraining?: () => void;

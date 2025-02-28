@@ -17,7 +17,7 @@ const BoxDate = ({
 }: BoxDateProps) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center rounded-lg p-4 h-40 w-40 shadow-md relative hover:bg-zinc-700 transition-all cursor-pointer 
+      className={`${training ? "border-zinc-500" : "border-zinc-800 "} border-b border-r flex flex-col items-center justify-center rounded-lg p-4 h-40 w-40 shadow-md relative hover:bg-zinc-700 transition-all cursor-pointer 
         ${isPlaceholder ? "bg-zinc-800 opacity-50" : isSunday ? "bg-success" : "bg-zinc-800"}`}
       role="button"
       tabIndex={0}

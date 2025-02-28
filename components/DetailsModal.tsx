@@ -28,7 +28,7 @@ const DetailsModal = ({
   const detailEntries = Object.entries(details).filter(([, value]) => value);
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent className="max-w-fit w-auto">
         {(onClose) => (
           <>
