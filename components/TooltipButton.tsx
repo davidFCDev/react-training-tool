@@ -9,6 +9,7 @@ interface TooltipButtonProps {
   icon: ReactNode;
   color?: "default" | "danger" | "primary";
   variant?: "light" | "flat" | "solid";
+  buttonProps?: any;
 }
 
 const TooltipButton = ({
@@ -18,6 +19,7 @@ const TooltipButton = ({
   icon,
   color = "default",
   variant = "light",
+  buttonProps,
 }: TooltipButtonProps) => {
   return (
     <Tooltip
@@ -38,6 +40,7 @@ const TooltipButton = ({
     >
       <Button
         isIconOnly
+        className={`${buttonProps}`}
         color={color}
         disabled={disabled}
         variant={variant}

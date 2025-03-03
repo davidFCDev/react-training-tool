@@ -75,6 +75,7 @@ export const Training = ({
             </Button>
           ) : (
             <TooltipButton
+              buttonProps={"scale-85"}
               color="danger"
               icon={<DeleteIcon />}
               tooltipText="Delete workout"
@@ -105,12 +106,14 @@ export const Training = ({
             ) : (
               <>
                 <TooltipButton
+                  buttonProps={"scale-80"}
                   icon={<ArrowsPointing />}
                   tooltipText="Show details"
                   variant="light"
                   onClick={() => openModal("details")}
                 />
                 <TooltipButton
+                  buttonProps={"scale-85"}
                   icon="✏️"
                   tooltipText="Edit workout"
                   onClick={() => handleEditTraining(fetchedWod)}
@@ -124,7 +127,7 @@ export const Training = ({
         <CardBody
           className={`grid gap-6 py-4 ${
             !isNotFavorite
-              ? "max-h-40 overflow-hidden"
+              ? "max-h-40 overflow-hidden flex items-center justify-center"
               : "max-h-80 overflow-y-auto"
           }`}
           style={{
@@ -157,9 +160,19 @@ export const Training = ({
                 ) : null
               )
           ) : (
-            <p className="text-sm text-zinc-300 whitespace-pre-wrap ">
+            <pre
+              className="text-sm text-zinc-300 text-left"
+              style={{
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 5,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "100%",
+              }}
+            >
               {fetchedWod?.metcon || "No metcon available"}
-            </p>
+            </pre>
           )}
         </CardBody>
       </Card>
