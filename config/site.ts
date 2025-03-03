@@ -28,6 +28,10 @@ export const siteConfig = {
       label: "Program",
       href: "/program",
     },
+    {
+      label: "Analytics",
+      href: "/analytics",
+    },
   ],
   links: {
     github: "https://github.com/nextui-org/nextui",

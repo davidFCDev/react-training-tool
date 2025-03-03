@@ -6,14 +6,7 @@ import { Divider } from "@nextui-org/divider";
 import { Form } from "@nextui-org/form";
 import Link from "next/link";
 
-interface AuthFormProps {
-  title: string;
-  subtitle: string;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  errorMessage: string | null;
-  linkText: string;
-  linkHref: string;
-}
+import { AuthFormProps } from "@/types";
 
 export default function AuthForm({
   title,

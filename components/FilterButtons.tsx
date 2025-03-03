@@ -1,9 +1,6 @@
 import { Button } from "@nextui-org/button";
 
-interface FilterButtonsProps {
-  category: string;
-  setCategory: (category: string) => void;
-}
+import { FilterButtonsProps } from "@/types";
 
 export const FilterButtons = ({
   category,

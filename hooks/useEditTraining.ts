@@ -1,11 +1,7 @@
 // useEditTraining.js
 import { useEffect, useState } from "react";
 
-interface UseEditTrainingProps {
-  training: Record<string, any>;
-  onSave: (training: Record<string, any>) => void;
-  onClose: () => void;
-}
+import { UseEditTrainingProps } from "@/types";
 
 export const useEditTraining = ({
   training,

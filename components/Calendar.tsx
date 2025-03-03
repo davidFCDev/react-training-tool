@@ -1,14 +1,12 @@
 import BoxDate from "./BoxDate";
 
+import { CalendarProps } from "@/types";
+
 const Calendar = ({
   days,
   trainingSchedule,
   handleDateClick,
-}: {
-  days: any;
-  trainingSchedule: any;
-  handleDateClick: (dayIndex: number) => void;
-}) => {
+}: CalendarProps) => {
   return (
     <>
       {days.map(

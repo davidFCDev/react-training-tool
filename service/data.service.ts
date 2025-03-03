@@ -12,6 +12,7 @@ import {
 import { db } from "../firebase/firebase";
 
 class DataService {
+  // CRUD operations
   async getCollection(collectionName: string) {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
@@ -87,6 +88,42 @@ class DataService {
       console.log("Document updated:", id, updatedData);
     } catch (error) {
       console.error("Error updating document:", error);
+      throw error;
+    }
+  }
+
+  // Custom operations
+
+  isInMonth(dateString: string, month: number | null): boolean {
+    if (month === null) return true;
+    const date = new Date(dateString);
+
+    return date.getMonth() + 1 === month;
+  }
+
+  async getTrainingCountByType(
+    collectionName: string,
+    filterFn: (data: any) => boolean = () => true
+  ) {
+    try {
+      const querySnapshot = await getDocs(collection(db, collectionName));
+      const trainingCounts: Record<string, number> = {};
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const training = data.training;
+        const type = training?.type || "Unknown";
+
+        if (filterFn(data)) {
+          trainingCounts[type] = (trainingCounts[type] || 0) + 1;
+        }
+      });
+
+      console.log("Training counts by type:", trainingCounts);
+
+      return trainingCounts;
+    } catch (error) {
+      console.error("Error fetching training counts by type:", error);
       throw error;
     }
   }

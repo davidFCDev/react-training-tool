@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import DataService from "@/service/data.service";
-import { Training } from "@/types";
+import { TrainingDay } from "@/types";
 
 interface TrainingSchedule {
-  [date: string]: Training;
+  [date: string]: TrainingDay;
 }
 
 const useTrainingSchedule = () => {
@@ -23,7 +23,7 @@ const useTrainingSchedule = () => {
   const fetchSchedule = async (): Promise<void> => {
     setLoading(true);
     try {
-      const scheduleData: Training[] = (
+      const scheduleData: TrainingDay[] = (
         await dataService.getCollection("programming")
       ).map((item: any) => ({
         id: item.id,
@@ -31,7 +31,7 @@ const useTrainingSchedule = () => {
         training: item.training,
       }));
       const formattedSchedule: TrainingSchedule = scheduleData.reduce(
-        (acc: TrainingSchedule, item: Training) => {
+        (acc: TrainingSchedule, item: TrainingDay) => {
           if (item.date) acc[item.date] = item;
 
           return acc;

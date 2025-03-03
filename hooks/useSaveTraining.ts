@@ -33,11 +33,16 @@ const useSaveTraining = () => {
       setSaveError(null);
 
       const id = nanoid();
-      const date = new Date().toISOString();
+      const createdAt = new Date().toISOString();
 
       try {
-        await dataService.addDocumentWithId("favorites", id, training, date);
-        dispatch(addFavorite({ id, date, training }));
+        await dataService.addDocumentWithId(
+          "favorites",
+          id,
+          training,
+          createdAt
+        );
+        dispatch(addFavorite({ id, createdAt, training }));
         toast.success("Workout saved successfully.");
         onSuccess?.();
       } catch {
@@ -86,7 +91,7 @@ const useSaveTraining = () => {
       setIsSaving(true);
       setSaveError(null);
 
-      const updatedData = { date: new Date().toISOString(), training };
+      const updatedData = { createdAt: new Date().toISOString(), training };
 
       try {
         await dataService.updateDocument("favorites", id, updatedData);

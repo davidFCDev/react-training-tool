@@ -1,16 +1,7 @@
 import { Tooltip } from "@heroui/tooltip";
 import { Button } from "@nextui-org/button";
-import { ReactNode } from "react";
 
-interface TooltipButtonProps {
-  tooltipText: string;
-  onClick: () => void;
-  disabled?: boolean;
-  icon: ReactNode;
-  color?: "default" | "danger" | "primary";
-  variant?: "light" | "flat" | "solid";
-  buttonProps?: any;
-}
+import { TooltipButtonProps } from "@/types";
 
 const TooltipButton = ({
   tooltipText,

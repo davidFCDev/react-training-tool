@@ -1,12 +1,6 @@
 import { AddIcon } from "./icons";
 
-interface BoxDateProps {
-  isPlaceholder: boolean;
-  isSunday: boolean;
-  dayIndex: number;
-  training?: any;
-  onClick: () => void;
-}
+import { BoxDateProps } from "@/types";
 
 const BoxDate = ({
   isPlaceholder,

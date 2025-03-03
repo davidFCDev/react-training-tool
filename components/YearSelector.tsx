@@ -1,11 +1,7 @@
 import { Select, SelectItem } from "@nextui-org/select";
 
 import { years } from "@/constants";
-
-interface YearSelectorProps {
-  selectedYear: number;
-  setSelectedYear: (year: number) => void;
-}
+import { YearSelectorProps } from "@/types";
 
 const YearSelector = ({ selectedYear, setSelectedYear }: YearSelectorProps) => {
   return (

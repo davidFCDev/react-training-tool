@@ -2,19 +2,13 @@
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-interface Training {
-  type?: string;
-  warmup?: string;
-  strength?: string;
-  metcon?: string;
-  accessory?: string;
-}
+import { TrainingData } from "@/types";
 
 interface TrainingResponse {
-  training: Training;
+  training: TrainingData;
 }
 
-const initialTrainingState: Training = {
+const initialTrainingState: TrainingData = {
   type: "",
   warmup: "",
   strength: "",
@@ -23,7 +17,7 @@ const initialTrainingState: Training = {
 };
 
 const useTraining = () => {
-  const [fetchedTraining, setFetchedTraining] = useState<Training | null>(
+  const [fetchedTraining, setFetchedTraining] = useState<TrainingData | null>(
     initialTrainingState
   );
   const [loading, setLoading] = useState(false);

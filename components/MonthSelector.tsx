@@ -1,12 +1,7 @@
 import { Select, SelectItem } from "@nextui-org/select";
 
 import { months } from "@/constants";
-
-interface MonthSelectorProps {
-  selectedMonth: number;
-  setSelectedMonth: (month: number) => void;
-  monthsWithTraining: Set<number>;
-}
+import { MonthSelectorProps } from "@/types";
 
 const MonthSelector = ({
   selectedMonth,

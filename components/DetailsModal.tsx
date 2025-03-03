@@ -34,19 +34,25 @@ const DetailsModal = ({
           {(onClose) => (
             <>
               <ModalHeader className="flex items-center justify-center gap-5">
-                {time && (
-                  <p className="text-xs text-gray-400">
-                    <span className="text-gray-300">{time}</span> min
-                  </p>
-                )}
-                <h2 className="text-2xl">{type || "Workout"}</h2>
+                <div className="flex items-center gap-4">
+                  <h2
+                    className={`text-xl font-semibold text-success-500 flex-grow text-center anton-regular tracking-wider uppercase`}
+                  >
+                    {type || "Training"}
+                  </h2>
+                  {time && (
+                    <span className="text-sm border border-zinc-600 text-zinc-300 py-1 px-2 rounded-sm">
+                      {fetchedWod.time} &apos;
+                    </span>
+                  )}
+                </div>
               </ModalHeader>
 
               <Divider />
 
               <ModalBody>
                 <div
-                  className="grid gap-6 py-6"
+                  className="grid gap-3 py-4"
                   style={{
                     gridTemplateColumns: `repeat(${Math.min(
                       detailEntries.length,

@@ -1,4 +1,4 @@
-import { SVGProps } from "react";
+import { ReactNode, SVGProps } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
@@ -22,6 +22,12 @@ export interface TrainingData {
 export interface Training {
   id: string;
   training: TrainingData;
+  createdAt: string;
+}
+
+export interface TrainingDay {
+  id: string;
+  training: TrainingData;
   date: string;
 }
 
@@ -34,6 +40,60 @@ export interface TrainingProps {
   setFetchedWod: (wod: TrainingData | null) => void;
   isNotFavorite?: boolean;
   id: string;
+}
+
+export interface YearSelectorProps {
+  selectedYear: number;
+  setSelectedYear: (year: number) => void;
+}
+
+export interface AuthFormProps {
+  title: string;
+  subtitle: string;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  errorMessage: string | null;
+  linkText: string;
+  linkHref: string;
+}
+
+export interface BoxDateProps {
+  isPlaceholder: boolean;
+  isSunday: boolean;
+  dayIndex: number;
+  training?: any;
+  onClick: () => void;
+}
+
+export interface CalendarProps {
+  days: any;
+  trainingSchedule: any;
+  handleDateClick: (dayIndex: number) => void;
+}
+
+export interface InfoCardProps {
+  title: string;
+  content: string;
+}
+
+export interface MonthSelectorProps {
+  selectedMonth: number;
+  setSelectedMonth: (month: number) => void;
+  monthsWithTraining: Set<number>;
+}
+
+export interface TooltipButtonProps {
+  tooltipText: string;
+  onClick: () => void;
+  disabled?: boolean;
+  icon: ReactNode;
+  color?: "default" | "danger" | "primary";
+  variant?: "light" | "flat" | "solid";
+  buttonProps?: any;
+}
+
+export interface FilterButtonsProps {
+  category: string;
+  setCategory: (category: string) => void;
 }
 
 export interface EditModalProps {
@@ -81,4 +141,10 @@ export interface TrainingScheduleItem {
   id: string;
   date: string;
   training: TrainingData;
+}
+
+export interface UseEditTrainingProps {
+  training: Record<string, any>;
+  onSave: (training: Record<string, any>) => void;
+  onClose: () => void;
 }
