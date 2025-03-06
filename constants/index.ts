@@ -50,3 +50,12 @@ export const MONTH_SELECT = [
   { name: "November", value: 11 },
   { name: "December", value: 12 },
 ];
+
+export const colorMap: { [key: string]: string } = {
+  Crossfit: "#76d7c4",
+  Hyrox: "#17C964",
+  Endurance: "#1e8449",
+};
+
+// constants.ts
+export const monthsWithTraining = new Set([0, 1, 3, 5]); // Ejemplo de meses con entrenamiento (Enero, Febrero, Abril, Junio)

@@ -127,6 +127,77 @@ class DataService {
       throw error;
     }
   }
+
+  async getTotalTrainingMinutesByDayOfWeekAndType(
+    collectionName: string,
+    selectedMonth: number | null
+  ) {
+    try {
+      const querySnapshot = await getDocs(collection(db, collectionName));
+
+      const dayOfWeekMinutes: Record<string, Record<string, number>> = {
+        Monday: {},
+        Tuesday: {},
+        Wednesday: {},
+        Thursday: {},
+        Friday: {},
+        Saturday: {},
+        Sunday: {},
+      };
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const training = data.training;
+
+        if (!training || !training.time || !data.date || !training.type) {
+          console.warn("Missing fields in document:", doc.id);
+
+          return;
+        }
+
+        // Filter by month
+        if (!this.isInMonth(data.date, selectedMonth)) {
+          return;
+        }
+
+        const date = new Date(data.date);
+        const dayIndex = date.getDay();
+        const dayNames = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const dayName = dayNames[dayIndex];
+        const trainingType = training.type || "Other";
+        const duration = parseInt(training.time, 10) || 0;
+
+        // Initialize the day of the week if it doesn't exist
+        if (!dayOfWeekMinutes[dayName][trainingType]) {
+          dayOfWeekMinutes[dayName][trainingType] = 0;
+        }
+
+        // Sum the duration for the day of the week and type
+        dayOfWeekMinutes[dayName][trainingType] += duration;
+      });
+
+      console.log(
+        "Total training minutes by day of the week and type:",
+        dayOfWeekMinutes
+      );
+
+      return dayOfWeekMinutes;
+    } catch (error) {
+      console.error(
+        "Error fetching total training minutes by day of the week and type:",
+        error
+      );
+      throw error;
+    }
+  }
 }
 
 export default DataService;
