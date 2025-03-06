@@ -32,9 +32,11 @@ const Program: React.FC = () => {
   } = useProgram();
 
   return (
-    <div className="w-full min-w-80 flex flex-col items-center justify-center p-4">
+    <div className="w-full min-w-80 flex flex-col items-center justify-center">
       <header className="mb-6 text-center">
-        <h1 className="title">Program</h1>
+        <h1 className="title">
+          <span className="text-success">P</span>rogram
+        </h1>
         <p className="subtitle">Create your own training program</p>
       </header>
 

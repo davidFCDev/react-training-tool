@@ -24,7 +24,9 @@ const Legend: React.FC<LegendProps> = ({ trainingCounts }) => {
             style={{ backgroundColor: colorMap[type] }}
           />
           <p>{type}</p>
-          <p>{trainingCounts[type] !== undefined ? trainingCounts[type] : 0}</p>
+          <p>
+            ({trainingCounts[type] !== undefined ? trainingCounts[type] : 0})
+          </p>
         </div>
       ))}
     </div>

@@ -38,7 +38,7 @@ export function TrainingForm({
       validationBehavior="native"
       onSubmit={handleSubmit}
     >
-      <div className="text-left mb-6 max-w-sm mx-auto flex flex-col">
+      <div className="text-center mb-6 max-w-sm mx-auto flex flex-col">
         <h1 className="title">
           <span className="text-success">Workout</span> Generator
         </h1>

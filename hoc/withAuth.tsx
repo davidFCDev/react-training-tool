@@ -16,7 +16,12 @@ const withAuth = (Component: React.FC) => {
       }
     }, [user, loading]);
 
-    if (loading) return <Spinner color="success" />;
+    if (loading)
+      return (
+        <div className="flex justify-center items-center h-80">
+          <Spinner color="success" size="lg" />
+        </div>
+      );
 
     return user ? <Component {...props} /> : null;
   };

@@ -15,8 +15,10 @@ function Analytics() {
     useAnalytics(selectedMonth);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center p-4">
-      <h1 className="title">Analytics</h1>
+    <div className="w-full flex flex-col items-center justify-center">
+      <h1 className="title">
+        <span className="text-success">A</span>nalytics
+      </h1>
       <p className="subtitle">Check your progress and improve your results</p>
 
       <div className="mt-6 w-full flex items-center justify-center gap-4">
@@ -35,7 +37,7 @@ function Analytics() {
             <TrainingPieChart chartData={pieChartData} />
           </ChartContainer>
 
-          <ChartContainer text="Training minutes by day of the week">
+          <ChartContainer text="Total training minutes by day of the week in a month">
             <TrainingStackedBarChart
               chartData={barChartData}
               maxMinutes={maxMinutes}

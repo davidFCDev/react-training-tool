@@ -53,9 +53,6 @@ export const MONTH_SELECT = [
 
 export const colorMap: { [key: string]: string } = {
   Crossfit: "#76d7c4",
-  Hyrox: "#17C964",
-  Endurance: "#1e8449",
+  Hyrox: "#3DE25B",
+  Endurance: "#0b6e4f",
 };
-
-// constants.ts
-export const monthsWithTraining = new Set([0, 1, 3, 5]); // Ejemplo de meses con entrenamiento (Enero, Febrero, Abril, Junio)

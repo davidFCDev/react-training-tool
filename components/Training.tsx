@@ -60,7 +60,7 @@ export const Training = ({
   return (
     <>
       <Card
-        className={`w-full rounded-lg shadow-lg ${
+        className={`w-full rounded-lg border border-zinc-700 ${
           isNotFavorite ? "max-w-5xl p-4" : "max-w-3xl p-2"
         }`}
       >

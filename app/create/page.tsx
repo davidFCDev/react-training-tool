@@ -30,7 +30,7 @@ function Create() {
 
       {/* Show loading spinner */}
       {loading && (
-        <div className="flex gap-4">
+        <div className="flex justify-center items-center h-80">
           <Spinner color="success" size="lg" />
         </div>
       )}

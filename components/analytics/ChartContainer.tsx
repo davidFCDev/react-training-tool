@@ -16,7 +16,7 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ text, children }) => {
       className={`w-full bg-zinc-800 flex flex-col rounded-xl p-6 border  ${theme.theme === "dark" ? "bg-zinc-800 border-zinc-600" : "bg-zinc-100 border-zinc-300"}`}
     >
       <p
-        className={`${theme.theme === "dark" ? "text-zinc-200 bg-zinc-900" : "text-zinc-800 bg-zinc-50"} "text-lg  p-2 rounded-lg"`}
+        className={`${theme.theme === "dark" ? "text-zinc-200 bg-zinc-900" : "text-zinc-800 bg-zinc-50"} text-base  p-2 rounded-lg`}
       >
         {text}
       </p>
