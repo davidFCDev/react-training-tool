@@ -1,23 +1,39 @@
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts";
 
-import { colorMap } from "@/constants";
-
-interface TrainingPieChartProps {
+interface ActivityPieChartProps {
   chartData: { id: string; value: number; label: string }[];
+  colorPalette?: string[];
+  width?: number;
+  height?: number;
+  margin?: { top: number; right: number; bottom: number; left: number };
 }
 
-const TrainingPieChart = ({ chartData }: TrainingPieChartProps) => {
+const defaultGreenPalette = [
+  "#76d7c4",
+  "#58d68d",
+  "#2ecc71",
+  "#28b463",
+  "#1d8348",
+];
+
+const ActivityPieChart = ({
+  chartData,
+  width = 400,
+  height = 300,
+  margin = { top: 20, right: 20, bottom: 20, left: 20 },
+  colorPalette = defaultGreenPalette,
+}: ActivityPieChartProps) => {
   const totalValue = chartData.reduce((acc, item) => acc + item.value, 0);
 
-  const pieChartDataWithColors = chartData.map((item) => ({
+  const pieChartDataWithColors = chartData.map((item, index) => ({
     ...item,
-    color: colorMap[item.label] || "gray",
+    color: colorPalette[index % colorPalette.length],
   }));
 
   return (
     <PieChart
-      height={300}
-      margin={{ top: 30, right: 10, bottom: 10, left: 10 }}
+      height={height}
+      margin={margin}
       series={[
         {
           arcLabel: (item) => {
@@ -33,7 +49,18 @@ const TrainingPieChart = ({ chartData }: TrainingPieChartProps) => {
       ]}
       slotProps={{
         legend: {
-          hidden: true,
+          position: {
+            vertical: "middle",
+            horizontal: "right",
+          },
+          itemMarkWidth: 16,
+          itemMarkHeight: 5,
+          markGap: 10,
+          itemGap: 20,
+          labelStyle: {
+            fontSize: 16,
+            fill: "rgba(255, 255, 255, 0.9)",
+          },
         },
         noDataOverlay: {
           style: {
@@ -56,9 +83,9 @@ const TrainingPieChart = ({ chartData }: TrainingPieChartProps) => {
           whiteSpace: "pre-line",
         },
       }}
-      width={300}
+      width={width}
     />
   );
 };
 
-export default TrainingPieChart;
+export default ActivityPieChart;

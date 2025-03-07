@@ -1,6 +1,6 @@
 import { useTheme } from "next-themes";
 
-import { colorMap } from "@/constants";
+import { trainingChartColorMap } from "@/constants";
 
 interface LegendProps {
   trainingCounts: Record<string, number>;
@@ -8,7 +8,7 @@ interface LegendProps {
 
 const Legend: React.FC<LegendProps> = ({ trainingCounts }) => {
   // If a new training type is added to `colorMap`, it will be displayed in the legend
-  const defaultTrainingTypes = Object.keys(colorMap); // ["Crossfit", "Hyrox", "Endurance"]
+  const defaultTrainingTypes = Object.keys(trainingChartColorMap); // ["Crossfit", "Hyrox", "Endurance"]
 
   const theme = useTheme();
 
@@ -21,7 +21,7 @@ const Legend: React.FC<LegendProps> = ({ trainingCounts }) => {
         >
           <div
             className="w-4 h-4 rounded-full"
-            style={{ backgroundColor: colorMap[type] }}
+            style={{ backgroundColor: trainingChartColorMap[type] }}
           />
           <p>{type}</p>
           <p>

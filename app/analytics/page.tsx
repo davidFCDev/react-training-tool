@@ -1,18 +1,23 @@
 "use client";
 import { useState } from "react";
 
-import TrainingStackedBarChart from "@/components/analytics/BarChart";
+import ActivityBarChart from "@/components/analytics/BarChart";
 import ChartContainer from "@/components/analytics/ChartContainer"; // Importamos el nuevo componente
-import Legend from "@/components/analytics/Legend";
 import MonthSelect from "@/components/analytics/MonthSelect";
-import TrainingPieChart from "@/components/analytics/PieChart";
+import ActivityPieChart from "@/components/analytics/PieChart";
 import withAuth from "@/hoc/withAuth";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 function Analytics() {
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
-  const { pieChartData, barChartData, series, maxMinutes, trainingCounts } =
-    useAnalytics(selectedMonth);
+  const {
+    trainingBarChartData,
+    trainingPieChartData,
+    strengthChartData,
+    gimnasticsChartData,
+    series,
+    maxMinutes,
+  } = useAnalytics(selectedMonth);
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
@@ -27,21 +32,50 @@ function Analytics() {
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
         />
-        <Legend trainingCounts={trainingCounts} />
       </div>
 
-      <div className="w-full flex flex-col items-center mt-6 gap-4">
+      <div className="w-full flex flex-col items-start mt-6 gap-4">
         <div className="flex gap-4 w-full">
           {/* Usamos el componente ChartContainer */}
           <ChartContainer text="Training distribution by month">
-            <TrainingPieChart chartData={pieChartData} />
+            <ActivityPieChart
+              chartData={trainingPieChartData}
+              colorPalette={["#76d7c4", "#3DE25B", "#0b6e4f"]}
+              margin={{ top: 20, right: 160, bottom: 10, left: 10 }}
+              width={400}
+            />
           </ChartContainer>
 
           <ChartContainer text="Total training minutes by day of the week in a month">
-            <TrainingStackedBarChart
-              chartData={barChartData}
+            <ActivityBarChart
+              chartData={trainingBarChartData}
               maxMinutes={maxMinutes}
               series={series}
+            />
+          </ChartContainer>
+        </div>
+
+        <div className="flex gap-4 w-full">
+          <ChartContainer text="Exercises distribution by month">
+            <ActivityPieChart
+              chartData={strengthChartData}
+              height={300}
+              margin={{ top: 20, right: 200, bottom: 10, left: 10 }}
+              width={500}
+            />
+          </ChartContainer>
+          <ChartContainer text="Exercises distribution by month">
+            <ActivityPieChart
+              chartData={gimnasticsChartData}
+              colorPalette={[
+                "#2ecc71",
+                "#28b463",
+                "#1d8348",
+                "#0b6e4f",
+                "#0a5348",
+              ]}
+              margin={{ top: 20, right: 200, bottom: 10, left: 10 }}
+              width={500}
             />
           </ChartContainer>
         </div>

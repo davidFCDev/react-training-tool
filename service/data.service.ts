@@ -11,6 +11,16 @@ import {
 
 import { db } from "../firebase/firebase";
 
+import { GYMNASTICS, STRENGTH } from "@/constants";
+
+const EXERCISE_VARIATIONS = {
+  "Snatch Variations": ["snatch", "power snatch", "squat snatch"],
+  "Clean Variations": ["clean", "power clean", "squat clean"],
+  Squats: ["back squat", "front squat"],
+  "Press & Jerk": ["push press", "shoulder press", "split jerk", "push jerk"],
+  "Clean and Jerk": ["clean and jerk"],
+};
+
 class DataService {
   // CRUD operations
   async getCollection(collectionName: string) {
@@ -119,8 +129,6 @@ class DataService {
         }
       });
 
-      console.log("Training counts by type:", trainingCounts);
-
       return trainingCounts;
     } catch (error) {
       console.error("Error fetching training counts by type:", error);
@@ -184,17 +192,161 @@ class DataService {
         dayOfWeekMinutes[dayName][trainingType] += duration;
       });
 
-      console.log(
-        "Total training minutes by day of the week and type:",
-        dayOfWeekMinutes
-      );
-
       return dayOfWeekMinutes;
     } catch (error) {
       console.error(
         "Error fetching total training minutes by day of the week and type:",
         error
       );
+      throw error;
+    }
+  }
+
+  async getGroupedExerciseCountsByMonth(
+    collectionName: string,
+    selectedMonth: number | null
+  ) {
+    try {
+      const querySnapshot = await getDocs(collection(db, collectionName));
+
+      // Initialize the groups
+      const strengthGroups = {
+        snatch: 0,
+        clean: 0,
+        squat: 0,
+        pushPress: 0,
+        cleanAndJerk: 0,
+      };
+
+      const gymnasticsGroups = {
+        handStand: 0,
+        pullUp: 0,
+        barMuscleUp: 0,
+        ringMuscleUp: 0,
+        core: 0,
+      };
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const date = new Date(data.date);
+
+        // Filter by month
+        if (selectedMonth !== null && date.getMonth() + 1 !== selectedMonth) {
+          return;
+        }
+
+        // Training fields
+        const trainingFields = [
+          data.training.accessory,
+          data.training.metcon,
+          data.training.strength,
+          data.training.warmup,
+        ];
+
+        const countOccurrences = (text: string, terms: string[]): number => {
+          let count = 0;
+
+          terms.forEach((term) => {
+            const regex = new RegExp(term, "gi");
+
+            count += (text.match(regex) || []).length;
+          });
+
+          return count;
+        };
+
+        // Count exercise occurrences
+        trainingFields.forEach((field) => {
+          if (field) {
+            // Strength
+            strengthGroups.snatch += countOccurrences(field, STRENGTH.SNATCH);
+
+            strengthGroups.clean += countOccurrences(field, STRENGTH.CLEAN);
+
+            strengthGroups.squat += countOccurrences(field, STRENGTH.SQUAT);
+
+            strengthGroups.pushPress += countOccurrences(field, STRENGTH.PRESS);
+
+            strengthGroups.cleanAndJerk += countOccurrences(
+              field,
+              STRENGTH.CAJ
+            );
+
+            // Gimnastics
+            gymnasticsGroups.handStand += countOccurrences(
+              field,
+              GYMNASTICS.HANDSTAND
+            );
+
+            gymnasticsGroups.pullUp += countOccurrences(field, GYMNASTICS.PULL);
+
+            gymnasticsGroups.barMuscleUp += countOccurrences(
+              field,
+              GYMNASTICS.MU
+            );
+
+            gymnasticsGroups.ringMuscleUp += countOccurrences(
+              field,
+              GYMNASTICS.RMU
+            );
+
+            gymnasticsGroups.core += countOccurrences(field, GYMNASTICS.CORE);
+          }
+        });
+      });
+
+      // Format the data for the pie chart
+      const strengthData = [
+        { id: "clean", value: strengthGroups.clean, label: "Clean" },
+        {
+          id: "snatch",
+          value: strengthGroups.snatch,
+          label: "Snatch",
+        },
+        { id: "squat", value: strengthGroups.squat, label: "Back/Front Squat" },
+        {
+          id: "pushPress",
+          value: strengthGroups.pushPress,
+          label: "Push Press/Jerk",
+        },
+        {
+          id: "cleanAndJerk",
+          value: strengthGroups.cleanAndJerk,
+          label: "Clean & Jerk",
+        },
+      ];
+
+      const gymnasticsData = [
+        {
+          id: "handStand",
+          value: gymnasticsGroups.handStand,
+          label: "Hand Stand",
+        },
+        {
+          id: "pullUp",
+          value: gymnasticsGroups.pullUp,
+          label: "Pull Up/C2B",
+        },
+        {
+          id: "toesToBar",
+          value: gymnasticsGroups.core,
+          label: "Core",
+        },
+        {
+          id: "barMuscleUp",
+          value: gymnasticsGroups.barMuscleUp,
+          label: "Bar Muscle Up",
+        },
+        {
+          id: "ringMuscleUp",
+          value: gymnasticsGroups.ringMuscleUp,
+          label: "Ring Muscle Up",
+        },
+      ];
+
+      return { strengthData, gymnasticsData };
+    } catch (error) {
+      console.error("Error fetching grouped exercise counts:", error);
       throw error;
     }
   }

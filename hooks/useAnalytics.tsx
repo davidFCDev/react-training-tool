@@ -13,13 +13,15 @@ export const useAnalytics = (selectedMonth: number | null) => {
   >({});
   const [allTypes, setAllTypes] = useState<string[]>([]);
   const [maxMinutes, setMaxMinutes] = useState<number>(0);
+  const [strengthChartData, setStrengthChartData] = useState<any[]>([]);
+  const [gimnasticsChartData, setGymnasticsChartData] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const dataService = new DataService();
 
-        // Get the total training count by type, filtered by month
+        // Get total training count by type, filtered by month
         const counts = await dataService.getTrainingCountByType(
           "programming",
           (data) => {
@@ -32,7 +34,7 @@ export const useAnalytics = (selectedMonth: number | null) => {
 
         setTrainingCounts(counts);
 
-        // Get the total training minutes by day of the week and type, filtered by month
+        // Get total training minutes by day of the week and type, filtered by month
         const minutesByDay =
           await dataService.getTotalTrainingMinutesByDayOfWeekAndType(
             "programming",
@@ -52,7 +54,7 @@ export const useAnalytics = (selectedMonth: number | null) => {
 
         setAllTypes(uniqueTypes);
 
-        // Calculate the maximum number of minutes for the Y-axis
+        // Calculate max minutes for Y-axis
         const max = Math.max(
           ...Object.values(minutesByDay).flatMap((dayData) =>
             Object.values(dayData)
@@ -60,6 +62,16 @@ export const useAnalytics = (selectedMonth: number | null) => {
         );
 
         setMaxMinutes(max);
+
+        // Get grouped exercise counts by month
+        const { strengthData, gymnasticsData } =
+          await dataService.getGroupedExerciseCountsByMonth(
+            "programming",
+            selectedMonth
+          );
+
+        setStrengthChartData(strengthData);
+        setGymnasticsChartData(gymnasticsData);
       } catch (error) {
         console.error("Error fetching chart data:", error);
       }
@@ -68,15 +80,17 @@ export const useAnalytics = (selectedMonth: number | null) => {
     fetchData();
   }, [selectedMonth]);
 
-  // Convert the training counts to the format required by the pie chart
-  const pieChartData = Object.entries(trainingCounts).map(([type, count]) => ({
-    id: type,
-    value: count,
-    label: type,
-  }));
+  // Convert training counts for PieChart
+  const trainingPieChartData = Object.entries(trainingCounts).map(
+    ([type, count]) => ({
+      id: type,
+      value: count,
+      label: type,
+    })
+  );
 
-  // Format the training minutes by day of the week and type for the stacked bar chart
-  const barChartData = Object.keys(trainingMinutesByDay).map((day) => {
+  // Format training minutes by day for BarChart
+  const trainingBarChartData = Object.keys(trainingMinutesByDay).map((day) => {
     const dayData = trainingMinutesByDay[day];
     const transformed: { [key: string]: number | string } = { day };
 
@@ -87,17 +101,19 @@ export const useAnalytics = (selectedMonth: number | null) => {
     return transformed;
   });
 
-  // Config for the stacked bar chart series
+  // Bar chart series config
   const series = allTypes.map((type) => ({
     dataKey: type,
     label: type,
   }));
 
   return {
-    pieChartData,
-    barChartData,
+    trainingBarChartData,
+    trainingPieChartData,
     series,
     maxMinutes,
-    trainingCounts, // We return the counts for the legend
+    trainingCounts,
+    strengthChartData,
+    gimnasticsChartData,
   };
 };
