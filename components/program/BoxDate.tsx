@@ -1,4 +1,4 @@
-import { AddIcon } from "./icons";
+import { AddIcon } from "../common/icons";
 
 import { BoxDateProps } from "@/types";
 

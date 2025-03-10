@@ -2,9 +2,9 @@
 
 import { Spinner } from "@nextui-org/spinner";
 
-import { TrainingForm } from "@/components/Form";
-import { Training } from "@/components/Training";
-import withAuth from "@/hoc/withAuth";
+import { TrainingForm } from "@/components/forms/Form";
+import withAuth from "@/components/hoc/withAuth";
+import { Training } from "@/components/trainings/Training";
 import useTraining from "@/hooks/useTraining";
 
 const isEmptyTraining = (training: any) => {

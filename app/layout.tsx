@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 
 import { Providers } from "./providers";
 
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/ui/Navbar";
 import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 

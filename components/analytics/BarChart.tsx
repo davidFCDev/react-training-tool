@@ -6,23 +6,31 @@ interface ActivityBarChartProps {
   chartData: any;
   series: any;
   maxMinutes: number;
-  colorPalette?: string[];
+  colorMap?: Record<string, string>;
 }
 
-const defaultBarChartPalette = ["#76d7c4", "#3DE25B", "#0b6e4f"];
+const defaultColorMap: Record<string, string> = {
+  Hyrox: "#76d7c4",
+  Crossfit: "#2ecc71",
+  Endurance: "#0b6e4f",
+};
 
 const ActivityBarChart = ({
   chartData,
   series,
   maxMinutes,
-  colorPalette = defaultBarChartPalette,
+  colorMap = defaultColorMap,
 }: ActivityBarChartProps) => {
   const { theme } = useTheme();
-  const darkMode = theme === "dark" ? "white" : "black";
+  const legendFill =
+    theme === "dark" ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.9)";
+  const overlayFill =
+    theme === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.7)";
+  const axisFill = theme === "dark" ? "white" : "black";
 
-  const updatedSeries = series.map((serie: any, index: number) => ({
+  const updatedSeries = series.map((serie: any) => ({
     ...serie,
-    color: colorPalette[index % colorPalette.length],
+    color: colorMap[serie.label] || "#95a5a6",
   }));
 
   return (
@@ -44,29 +52,29 @@ const ActivityBarChart = ({
           itemGap: 20,
           labelStyle: {
             fontSize: 16,
-            fill: "rgba(255, 255, 255, 0.9)",
+            fill: legendFill,
           },
         },
         noDataOverlay: {
           style: {
             fontSize: "16px",
-            fill: "rgba(255, 255, 255, 0.7)",
+            fill: overlayFill,
           },
         },
         loadingOverlay: {
           style: {
             fontSize: "16px",
-            fill: "rgba(255, 255, 255, 0.7)",
+            fill: overlayFill,
           },
         },
       }}
       sx={{
         [`.${axisClasses.root}`]: {
           [`.${axisClasses.tick}, .${axisClasses.line}`]: {
-            stroke: darkMode,
+            stroke: axisFill,
           },
           [`.${axisClasses.tickLabel}`]: {
-            fill: darkMode,
+            fill: axisFill,
           },
         },
         [`& .${axisClasses.left} .${axisClasses.label}`]: {
@@ -87,14 +95,14 @@ const ActivityBarChart = ({
             "Sunday",
           ],
           tickLabelStyle: {
-            fill: darkMode,
+            fill: axisFill,
           },
         },
       ]}
       yAxis={[
         {
           labelStyle: {
-            fill: darkMode,
+            fill: axisFill,
             fontSize: 16,
           },
           label: "( Minutes )",
@@ -103,7 +111,7 @@ const ActivityBarChart = ({
           min: 0,
           max: maxMinutes,
           tickLabelStyle: {
-            fill: darkMode,
+            fill: axisFill,
             fontSize: 12,
           },
         },

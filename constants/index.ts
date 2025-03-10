@@ -103,6 +103,7 @@ export const STRENGTH = {
     "clean to push jerk",
     "clean to split jerk",
   ],
+  DEADLIFT: ["deadlift", "sumo deadlift", "romanian deadlift", "dead lift"],
 };
 
 export const GYMNASTICS = {

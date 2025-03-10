@@ -216,6 +216,7 @@ class DataService {
         squat: 0,
         pushPress: 0,
         cleanAndJerk: 0,
+        deadlift: 0,
       };
 
       const gymnasticsGroups = {
@@ -272,6 +273,11 @@ class DataService {
               STRENGTH.CAJ
             );
 
+            strengthGroups.deadlift += countOccurrences(
+              field,
+              STRENGTH.DEADLIFT
+            );
+
             // Gimnastics
             gymnasticsGroups.handStand += countOccurrences(
               field,
@@ -313,6 +319,11 @@ class DataService {
           id: "cleanAndJerk",
           value: strengthGroups.cleanAndJerk,
           label: "Clean & Jerk",
+        },
+        {
+          id: "deadlift",
+          value: strengthGroups.deadlift,
+          label: "Deadlift",
         },
       ];
 

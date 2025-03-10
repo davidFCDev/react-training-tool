@@ -2,7 +2,7 @@
 import { Link } from "@nextui-org/link";
 import { button as buttonStyles } from "@nextui-org/theme";
 
-import { subtitle } from "@/components/primitives";
+import { subtitle } from "@/components/utils/primitives";
 import { useAuth } from "@/context/authContext";
 
 export default function Home() {

@@ -4,11 +4,11 @@ import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 
-import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import DetailsModal from "./DetailsModal";
-import EditTrainingModal from "./EditTrainingModal";
-import { ArrowsPointing, DeleteIcon, LoveIcon } from "./icons";
-import TooltipButton from "./TooltipButton";
+import { ArrowsPointing, DeleteIcon, LoveIcon } from "../common/icons";
+import TooltipButton from "../common/TooltipButton";
+import ConfirmDeleteModal from "../modals/ConfirmDeleteModal";
+import DetailsModal from "../modals/DetailsModal";
+import EditTrainingModal from "../modals/EditTrainingModal";
 
 import useModals from "@/hooks/useModals";
 import useSaveTraining from "@/hooks/useSaveTraining";

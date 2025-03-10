@@ -10,9 +10,9 @@ import {
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 
-import { DeleteIcon, UpdateIcon } from "./icons";
-import InfoCard from "./InfoCard";
-import TooltipButton from "./TooltipButton";
+import { DeleteIcon, UpdateIcon } from "../common/icons";
+import InfoCard from "../common/InfoCard";
+import TooltipButton from "../common/TooltipButton";
 
 import { DetailsModalProps } from "@/types";
 

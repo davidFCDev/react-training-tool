@@ -3,9 +3,9 @@
 
 import { Spinner } from "@nextui-org/spinner";
 
-import { FilterButtons } from "@/components/FilterButtons";
-import { FilteredTrainingList } from "@/components/FilteredTrainingList";
-import withAuth from "@/hoc/withAuth";
+import { FilterButtons } from "@/components/common/FilterButtons";
+import withAuth from "@/components/hoc/withAuth";
+import { FilteredTrainingList } from "@/components/trainings/FilteredTrainingList";
 import { useFavorites } from "@/hooks/useFavorites";
 
 function Favorites() {

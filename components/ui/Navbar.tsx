@@ -12,10 +12,10 @@ import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 import NextLink from "next/link";
 
-import { GithubIcon, Logo } from "./icons";
-import ProfileDropdown from "./ProfileDropdown";
+import { GithubIcon, Logo } from "../common/icons";
+import ProfileDropdown from "../user/ProfileDropdown";
 
-import { ThemeSwitch } from "@/components/theme-switch";
+import { ThemeSwitch } from "@/components/utils/theme-switch";
 import { siteConfig } from "@/config/site";
 import { useAuth } from "@/context/authContext";
 

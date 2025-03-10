@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 "use client";
 
-import { AddTrainingModal } from "@/components/AddTrainingModal";
-import Calendar from "@/components/Calendar";
-import DaysOfWeek from "@/components/DaysOfWeek";
-import DetailsModal from "@/components/DetailsModal";
-import MonthSelector from "@/components/MonthSelector";
-import YearSelector from "@/components/YearSelector";
-import withAuth from "@/hoc/withAuth";
+import withAuth from "@/components/hoc/withAuth";
+import DetailsModal from "@/components/modals/DetailsModal";
+import { AddTrainingModal } from "@/components/program/AddTrainingModal";
+import Calendar from "@/components/program/Calendar";
+import DaysOfWeek from "@/components/program/DaysOfWeek";
+import MonthSelector from "@/components/program/MonthSelector";
+import YearSelector from "@/components/program/YearSelector";
 import useProgram from "@/hooks/useProgram";
 
 const Program: React.FC = () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import AuthForm from "../../components/AuthForm";
+import AuthForm from "../../components/user/AuthForm";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function Register() {
