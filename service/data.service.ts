@@ -104,13 +104,23 @@ class DataService {
 
   // Custom operations
 
-  isInMonth(dateString: string, month: number | null): boolean {
-    if (month === null) return true;
+  isInMonth(
+    dateString: string,
+    month: number | null,
+    year: number | null
+  ): boolean {
+    if (month === null && year === null) return true;
+
     const date = new Date(dateString);
 
-    return date.getMonth() + 1 === month;
+    if (year !== null && date.getFullYear() !== year) {
+      return false;
+    }
+
+    return date.getMonth() + 1 === month || month === null;
   }
 
+  // Función para obtener el conteo de entrenamientos por tipo
   async getTrainingCountByType(
     collectionName: string,
     filterFn: (data: any) => boolean = () => true
@@ -136,9 +146,11 @@ class DataService {
     }
   }
 
+  // Función para obtener los minutos totales de entrenamiento por día de la semana y tipo
   async getTotalTrainingMinutesByDayOfWeekAndType(
     collectionName: string,
-    selectedMonth: number | null
+    selectedMonth: number | null,
+    selectedYear: number | null
   ) {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
@@ -163,8 +175,8 @@ class DataService {
           return;
         }
 
-        // Filter by month
-        if (!this.isInMonth(data.date, selectedMonth)) {
+        // Filtramos por mes y año
+        if (!this.isInMonth(data.date, selectedMonth, selectedYear)) {
           return;
         }
 
@@ -183,12 +195,12 @@ class DataService {
         const trainingType = training.type || "Other";
         const duration = parseInt(training.time, 10) || 0;
 
-        // Initialize the day of the week if it doesn't exist
+        // Inicializamos el día de la semana si no existe
         if (!dayOfWeekMinutes[dayName][trainingType]) {
           dayOfWeekMinutes[dayName][trainingType] = 0;
         }
 
-        // Sum the duration for the day of the week and type
+        // Sumamos la duración para el día de la semana y tipo
         dayOfWeekMinutes[dayName][trainingType] += duration;
       });
 
@@ -202,14 +214,16 @@ class DataService {
     }
   }
 
+  // Función para obtener los conteos agrupados de ejercicios por mes
   async getGroupedExerciseCountsByMonth(
     collectionName: string,
-    selectedMonth: number | null
+    selectedMonth: number | null,
+    selectedYear: number | null
   ) {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
 
-      // Initialize the groups
+      // Inicializamos los grupos
       const strengthGroups = {
         snatch: 0,
         clean: 0,
@@ -231,12 +245,15 @@ class DataService {
         const data = doc.data();
         const date = new Date(data.date);
 
-        // Filter by month
-        if (selectedMonth !== null && date.getMonth() + 1 !== selectedMonth) {
+        // Filtramos por mes y año
+        if (
+          (selectedMonth !== null && date.getMonth() + 1 !== selectedMonth) ||
+          (selectedYear !== null && date.getFullYear() !== selectedYear)
+        ) {
           return;
         }
 
-        // Training fields
+        // Campos de entrenamiento
         const trainingFields = [
           data.training.accessory,
           data.training.metcon,
@@ -256,59 +273,46 @@ class DataService {
           return count;
         };
 
-        // Count exercise occurrences
+        // Contamos las ocurrencias de los ejercicios
         trainingFields.forEach((field) => {
           if (field) {
             // Strength
             strengthGroups.snatch += countOccurrences(field, STRENGTH.SNATCH);
-
             strengthGroups.clean += countOccurrences(field, STRENGTH.CLEAN);
-
             strengthGroups.squat += countOccurrences(field, STRENGTH.SQUAT);
-
             strengthGroups.pushPress += countOccurrences(field, STRENGTH.PRESS);
-
             strengthGroups.cleanAndJerk += countOccurrences(
               field,
               STRENGTH.CAJ
             );
-
             strengthGroups.deadlift += countOccurrences(
               field,
               STRENGTH.DEADLIFT
             );
 
-            // Gimnastics
+            // Gimnasia
             gymnasticsGroups.handStand += countOccurrences(
               field,
               GYMNASTICS.HANDSTAND
             );
-
             gymnasticsGroups.pullUp += countOccurrences(field, GYMNASTICS.PULL);
-
             gymnasticsGroups.barMuscleUp += countOccurrences(
               field,
               GYMNASTICS.MU
             );
-
             gymnasticsGroups.ringMuscleUp += countOccurrences(
               field,
               GYMNASTICS.RMU
             );
-
             gymnasticsGroups.core += countOccurrences(field, GYMNASTICS.CORE);
           }
         });
       });
 
-      // Format the data for the pie chart
+      // Formateamos los datos para el gráfico circular
       const strengthData = [
         { id: "clean", value: strengthGroups.clean, label: "Clean" },
-        {
-          id: "snatch",
-          value: strengthGroups.snatch,
-          label: "Snatch",
-        },
+        { id: "snatch", value: strengthGroups.snatch, label: "Snatch" },
         { id: "squat", value: strengthGroups.squat, label: "Back/Front Squat" },
         {
           id: "pushPress",
@@ -320,11 +324,7 @@ class DataService {
           value: strengthGroups.cleanAndJerk,
           label: "Clean & Jerk",
         },
-        {
-          id: "deadlift",
-          value: strengthGroups.deadlift,
-          label: "Deadlift",
-        },
+        { id: "deadlift", value: strengthGroups.deadlift, label: "Deadlift" },
       ];
 
       const gymnasticsData = [
@@ -333,16 +333,8 @@ class DataService {
           value: gymnasticsGroups.handStand,
           label: "Hand Stand",
         },
-        {
-          id: "pullUp",
-          value: gymnasticsGroups.pullUp,
-          label: "Pull Up/C2B",
-        },
-        {
-          id: "toesToBar",
-          value: gymnasticsGroups.core,
-          label: "Core",
-        },
+        { id: "pullUp", value: gymnasticsGroups.pullUp, label: "Pull Up/C2B" },
+        { id: "toesToBar", value: gymnasticsGroups.core, label: "Core" },
         {
           id: "barMuscleUp",
           value: gymnasticsGroups.barMuscleUp,

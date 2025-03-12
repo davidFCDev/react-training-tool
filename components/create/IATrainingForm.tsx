@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { max_duration, training_type } from "@/constants";
 import { TrainingFormProps } from "@/types";
 
-export function TrainingForm({
+export function IATrainingForm({
   onSubmit,
   loading,
   setFetchedWod,
@@ -34,60 +34,59 @@ export function TrainingForm({
 
   return (
     <Form
-      className="w-full"
+      className="w-full flex flex-col gap-3"
       validationBehavior="native"
       onSubmit={handleSubmit}
     >
-      <div className="text-center mb-6 max-w-sm mx-auto flex flex-col">
-        <h1 className="title">
-          <span className="text-success">Workout</span> Generator
-        </h1>
-        <p className="subtitle">
-          Select your workout type and duration, then generate your custom
-          workout!
-        </p>
-      </div>
-      <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-        <Select
-          className="w-full"
-          color="default"
-          label="Select training"
-          name="wod-type"
-          variant="faded"
-        >
-          {training_type.map((type) => (
-            <SelectItem key={type} aria-label="wod-type">
-              {type}
-            </SelectItem>
-          ))}
-        </Select>
+      <div className="flex w-full gap-3">
+        <div className="flex w-full flex-wrap md:flex-nowrap">
+          <Select
+            className="w-full"
+            color="default"
+            label="Select training"
+            name="wod-type"
+            variant="faded"
+          >
+            {training_type.map((type) => (
+              <SelectItem key={type} aria-label="wod-type">
+                {type}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
+
+        <div className="flex w-full flex-wrap md:flex-nowrap">
+          <Select
+            className="w-full"
+            label="Select max duration"
+            name="duration"
+            variant="faded"
+          >
+            {max_duration.map((duration) => (
+              <SelectItem key={duration} aria-label="duration">
+                {duration}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
       </div>
 
-      <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-        <Select
-          className="w-full"
-          label="Select max duration"
-          name="duration"
-          variant="faded"
-        >
-          {max_duration.map((duration) => (
-            <SelectItem key={duration} aria-label="duration">
-              {duration}
-            </SelectItem>
-          ))}
-        </Select>
-      </div>
-
-      <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+      <div className="flex w-full flex-wrap md:flex-nowrap">
         <Textarea
           label="Observations"
+          minRows={8}
           name="observations"
-          placeholder="Enter any observations here"
+          placeholder="Enter any observations about the training here"
           variant="faded"
         />
       </div>
-      <div className="flex gap-2 mt-4">
-        <Button color="success" type="submit" variant="solid">
+      <div className="flex items-center gap-2 justify-end w-full">
+        <Button
+          className="w-full"
+          color="success"
+          type="submit"
+          variant="solid"
+        >
           {loading ? "Loading..." : "Generate"}
         </Button>
         <Button

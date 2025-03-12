@@ -14,6 +14,7 @@ const MonthSelector = ({
       className="w-48"
       label="Month"
       selectedKeys={new Set([String(selectedMonth)])}
+      variant="faded"
       onSelectionChange={(keys) =>
         setSelectedMonth(Number(Array.from(keys)[0]))
       }

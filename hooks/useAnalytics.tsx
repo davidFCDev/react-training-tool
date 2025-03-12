@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 import DataService from "@/service/data.service";
 
-export const useAnalytics = (selectedMonth: number | null) => {
+export const useAnalytics = (
+  selectedMonth: number | null,
+  selectedYear: number | null
+) => {
   const [trainingCounts, setTrainingCounts] = useState<Record<string, number>>(
     {}
   );
@@ -21,24 +24,30 @@ export const useAnalytics = (selectedMonth: number | null) => {
       try {
         const dataService = new DataService();
 
-        // Get total training count by type, filtered by month
+        // Get total training count by type, filtered by month and year
         const counts = await dataService.getTrainingCountByType(
           "programming",
           (data) => {
-            if (selectedMonth === null) return true;
+            if (selectedMonth === null && selectedYear === null) return true;
             const date = new Date(data.date);
 
-            return date.getMonth() + 1 === selectedMonth;
+            // Check if the date matches the selected month and year
+            return (
+              (selectedMonth === null ||
+                date.getMonth() + 1 === selectedMonth) &&
+              (selectedYear === null || date.getFullYear() === selectedYear)
+            );
           }
         );
 
         setTrainingCounts(counts);
 
-        // Get total training minutes by day of the week and type, filtered by month
+        // Get total training minutes by day of the week and type, filtered by month and year
         const minutesByDay =
           await dataService.getTotalTrainingMinutesByDayOfWeekAndType(
             "programming",
-            selectedMonth
+            selectedMonth,
+            selectedYear
           );
 
         setTrainingMinutesByDay(minutesByDay);
@@ -63,11 +72,12 @@ export const useAnalytics = (selectedMonth: number | null) => {
 
         setMaxMinutes(max);
 
-        // Get grouped exercise counts by month
+        // Get grouped exercise counts by month, filtered by month and year
         const { strengthData, gymnasticsData } =
           await dataService.getGroupedExerciseCountsByMonth(
             "programming",
-            selectedMonth
+            selectedMonth,
+            selectedYear
           );
 
         setStrengthChartData(strengthData);
@@ -78,7 +88,7 @@ export const useAnalytics = (selectedMonth: number | null) => {
     };
 
     fetchData();
-  }, [selectedMonth]);
+  }, [selectedMonth, selectedYear]);
 
   // Convert training counts for PieChart
   const trainingPieChartData = Object.entries(trainingCounts).map(

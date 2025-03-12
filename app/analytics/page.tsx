@@ -2,14 +2,18 @@
 import { useState } from "react";
 
 import ActivityBarChart from "@/components/analytics/BarChart";
-import ChartContainer from "@/components/analytics/ChartContainer"; // Importamos el nuevo componente
+import ChartContainer from "@/components/analytics/ChartContainer";
 import MonthSelect from "@/components/analytics/MonthSelect";
 import ActivityPieChart from "@/components/analytics/PieChart";
 import withAuth from "@/components/hoc/withAuth";
+import YearSelector from "@/components/program/YearSelector";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 function Analytics() {
+  const currentYear = new Date().getFullYear();
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(currentYear);
+
   const {
     trainingBarChartData,
     trainingPieChartData,
@@ -17,7 +21,7 @@ function Analytics() {
     gimnasticsChartData,
     series,
     maxMinutes,
-  } = useAnalytics(selectedMonth);
+  } = useAnalytics(selectedMonth, selectedYear);
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
@@ -30,6 +34,10 @@ function Analytics() {
         <MonthSelect
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
+        />
+        <YearSelector
+          selectedYear={selectedYear ?? 0}
+          setSelectedYear={setSelectedYear}
         />
       </div>
 

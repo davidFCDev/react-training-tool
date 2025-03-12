@@ -10,6 +10,7 @@ const YearSelector = ({ selectedYear, setSelectedYear }: YearSelectorProps) => {
       className="w-32"
       label="Year"
       selectedKeys={new Set([String(selectedYear)])}
+      variant="faded"
       onSelectionChange={(keys) => setSelectedYear(Number(Array.from(keys)[0]))}
     >
       {years.map((year) => (

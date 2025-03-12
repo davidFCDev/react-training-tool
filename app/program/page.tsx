@@ -53,7 +53,7 @@ const Program: React.FC = () => {
         />
       </div>
 
-      <main className="grid grid-cols-7 gap-2 w-full">
+      <main className="grid grid-cols-7 gap-3 w-full">
         <DaysOfWeek />
         <Calendar
           days={days}
