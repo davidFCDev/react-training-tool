@@ -17,9 +17,8 @@ const isEmptyTraining = (training: any) =>
 const FORM_CONFIG = {
   IA: {
     title: "Generator",
-    colorTitle: "Workout",
-    subtitle:
-      "Select your workout type and duration, then generate your custom workout!",
+    colorTitle: "AI",
+    subtitle: "Generate a workout using the AI Training Generator",
     form: (props: any) => <IATrainingForm {...props} />,
   },
   manual: {
@@ -45,16 +44,34 @@ function Create() {
     <div className="w-full min-w-80 h-[80vh] flex flex-col items-center justify-between">
       {/* Conditionally render forms */}
       {!loading && (!fetchedTraining || isEmptyTraining(fetchedTraining)) && (
-        <CreateFormContainer
-          colorTitle={currentForm.colorTitle}
-          form={currentForm.form({
-            loading,
-            setFetchedWod: setFetchedTraining,
-            onSubmit: mode === "IA" ? getTraining : handleSave,
-          })}
-          subtitle={currentForm.subtitle}
-          title={currentForm.title}
-        />
+        <>
+          <CreateFormContainer
+            colorTitle={currentForm.colorTitle}
+            form={currentForm.form({
+              loading,
+              setFetchedWod: setFetchedTraining,
+              onSubmit: mode === "IA" ? getTraining : handleSave,
+            })}
+            subtitle={currentForm.subtitle}
+            title={currentForm.title}
+          />
+
+          {/* Mode toggle buttons */}
+          <footer className="flex space-x-4">
+            {Object.keys(FORM_CONFIG).map((key) => (
+              <Button
+                key={key}
+                color={mode === key ? "success" : "default"}
+                variant="light"
+                onPress={() => setMode(key as "IA" | "manual")}
+              >
+                {key === "IA"
+                  ? "IA Training Generator"
+                  : "Manual Training Generator"}
+              </Button>
+            ))}
+          </footer>
+        </>
       )}
 
       {/* Loading spinner */}
@@ -75,22 +92,6 @@ function Create() {
           />
         </div>
       )}
-
-      {/* Mode toggle buttons */}
-      <footer className="flex space-x-4">
-        {Object.keys(FORM_CONFIG).map((key) => (
-          <Button
-            key={key}
-            color={mode === key ? "success" : "default"}
-            variant="light"
-            onPress={() => setMode(key as "IA" | "manual")}
-          >
-            {key === "IA"
-              ? "IA Training Generator"
-              : "Manual Training Generator"}
-          </Button>
-        ))}
-      </footer>
     </div>
   );
 }

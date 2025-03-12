@@ -17,12 +17,13 @@ export interface TrainingData {
   type?: string;
   time?: string;
   observations?: string;
+  name?: string;
 }
 
 export interface Training {
   id: string;
   training: TrainingData;
-  createdAt: string;
+  date: string;
 }
 
 export interface TrainingDay {

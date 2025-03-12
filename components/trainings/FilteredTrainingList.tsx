@@ -22,10 +22,8 @@ export const FilteredTrainingList = ({
           );
         })
       ) : (
-        <div className="col-span-2">
-          <p className="text-lg text-gray-500">
-            No workouts found for this category.
-          </p>
+        <div className="col-span-3 flex flex-col items-center justify-center">
+          <p className="text-zinc-300">No workouts found for this category.</p>
         </div>
       )}
     </div>

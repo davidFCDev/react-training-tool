@@ -13,14 +13,6 @@ import { db } from "../firebase/firebase";
 
 import { GYMNASTICS, STRENGTH } from "@/constants";
 
-const EXERCISE_VARIATIONS = {
-  "Snatch Variations": ["snatch", "power snatch", "squat snatch"],
-  "Clean Variations": ["clean", "power clean", "squat clean"],
-  Squats: ["back squat", "front squat"],
-  "Press & Jerk": ["push press", "shoulder press", "split jerk", "push jerk"],
-  "Clean and Jerk": ["clean and jerk"],
-};
-
 class DataService {
   // CRUD operations
   async getCollection(collectionName: string) {
@@ -120,7 +112,7 @@ class DataService {
     return date.getMonth() + 1 === month || month === null;
   }
 
-  // Función para obtener el conteo de entrenamientos por tipo
+  // Function to get the total training minutes by day of the week
   async getTrainingCountByType(
     collectionName: string,
     filterFn: (data: any) => boolean = () => true
@@ -146,7 +138,7 @@ class DataService {
     }
   }
 
-  // Función para obtener los minutos totales de entrenamiento por día de la semana y tipo
+  // Function to get the total training minutes by day of the week and type
   async getTotalTrainingMinutesByDayOfWeekAndType(
     collectionName: string,
     selectedMonth: number | null,
@@ -175,7 +167,7 @@ class DataService {
           return;
         }
 
-        // Filtramos por mes y año
+        // Filter by month and year
         if (!this.isInMonth(data.date, selectedMonth, selectedYear)) {
           return;
         }
@@ -195,12 +187,12 @@ class DataService {
         const trainingType = training.type || "Other";
         const duration = parseInt(training.time, 10) || 0;
 
-        // Inicializamos el día de la semana si no existe
+        // Initialize the day of the week if it doesn't exist
         if (!dayOfWeekMinutes[dayName][trainingType]) {
           dayOfWeekMinutes[dayName][trainingType] = 0;
         }
 
-        // Sumamos la duración para el día de la semana y tipo
+        // Sum the duration
         dayOfWeekMinutes[dayName][trainingType] += duration;
       });
 
@@ -214,7 +206,7 @@ class DataService {
     }
   }
 
-  // Función para obtener los conteos agrupados de ejercicios por mes
+  // Function to get the total training minutes by type
   async getGroupedExerciseCountsByMonth(
     collectionName: string,
     selectedMonth: number | null,
@@ -223,7 +215,6 @@ class DataService {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
 
-      // Inicializamos los grupos
       const strengthGroups = {
         snatch: 0,
         clean: 0,
@@ -245,7 +236,6 @@ class DataService {
         const data = doc.data();
         const date = new Date(data.date);
 
-        // Filtramos por mes y año
         if (
           (selectedMonth !== null && date.getMonth() + 1 !== selectedMonth) ||
           (selectedYear !== null && date.getFullYear() !== selectedYear)
@@ -253,7 +243,6 @@ class DataService {
           return;
         }
 
-        // Campos de entrenamiento
         const trainingFields = [
           data.training.accessory,
           data.training.metcon,
@@ -273,7 +262,6 @@ class DataService {
           return count;
         };
 
-        // Contamos las ocurrencias de los ejercicios
         trainingFields.forEach((field) => {
           if (field) {
             // Strength
@@ -290,7 +278,7 @@ class DataService {
               STRENGTH.DEADLIFT
             );
 
-            // Gimnasia
+            // Gimnastics
             gymnasticsGroups.handStand += countOccurrences(
               field,
               GYMNASTICS.HANDSTAND
@@ -309,7 +297,7 @@ class DataService {
         });
       });
 
-      // Formateamos los datos para el gráfico circular
+      // Format data for charts
       const strengthData = [
         { id: "clean", value: strengthGroups.clean, label: "Clean" },
         { id: "snatch", value: strengthGroups.snatch, label: "Snatch" },

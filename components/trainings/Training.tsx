@@ -1,14 +1,17 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
-import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Card } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
+import { useState } from "react";
+import { toast } from "sonner";
 
-import { ArrowsPointing, DeleteIcon, LoveIcon } from "../common/icons";
-import TooltipButton from "../common/TooltipButton";
+import AddNameModal from "../modals/AddNameModal";
 import ConfirmDeleteModal from "../modals/ConfirmDeleteModal";
 import DetailsModal from "../modals/DetailsModal";
 import EditTrainingModal from "../modals/EditTrainingModal";
+
+import TrainingBody from "./TrainingBody";
+import TrainingHeader from "./TrainingHeader";
 
 import useModals from "@/hooks/useModals";
 import useSaveTraining from "@/hooks/useSaveTraining";
@@ -22,19 +25,22 @@ export const Training = ({
 }: TrainingProps) => {
   const {
     isSaving,
+    trainingToEdit,
     saveTraining,
     deleteTraining,
     updateTraining,
     setTrainingToEdit,
-    trainingToEdit,
   } = useSaveTraining();
+
+  const [trainingName, setTrainingName] = useState("");
 
   const {
     isModalOpen,
     isTrainingModalOpen,
+    isEditModalOpen,
+    isNameModalOpen,
     openModal,
     closeModal,
-    isEditModalOpen,
   } = useModals();
 
   const handleEditTraining = (training: TrainingData) => {
@@ -47,8 +53,24 @@ export const Training = ({
     closeModal("delete");
   };
 
-  const handleSave = () => {
-    saveTraining(fetchedWod, () => setFetchedWod(null));
+  const handleOpenNameModal = () => {
+    openModal("name");
+  };
+
+  const handleSaveWithName = () => {
+    if (!trainingName.trim()) {
+      toast.error("Please enter a workout name.");
+
+      return;
+    }
+
+    const trainingWithName = { ...fetchedWod, name: trainingName };
+
+    saveTraining(trainingWithName, () => {
+      setFetchedWod(null);
+      setTrainingName("");
+      closeModal("name");
+    });
   };
 
   const handleUpdateTraining = async (updatedTraining: TrainingData) => {
@@ -64,118 +86,35 @@ export const Training = ({
           isNotFavorite ? "max-w-5xl p-4" : "max-w-3xl p-2"
         }`}
       >
-        <CardHeader className="flex justify-between items-center gap-4">
-          {isNotFavorite ? (
-            <Button
-              color="default"
-              variant="ghost"
-              onPress={() => setFetchedWod(null)}
-            >
-              Back
-            </Button>
-          ) : (
-            <TooltipButton
-              buttonProps={"scale-85"}
-              color="danger"
-              icon={<DeleteIcon />}
-              tooltipText="Delete workout"
-              onClick={() => openModal("delete")}
-            />
-          )}
-          <div className="flex items-center gap-4">
-            <h2
-              className={`${isNotFavorite ? "text-2xl" : "text-lg"} font-semibold text-success-500 flex-grow text-center anton-regular tracking-wider uppercase`}
-            >
-              {fetchedWod?.type || "Training"}
-            </h2>
-            {fetchedWod?.time && (
-              <span className="text-sm border border-zinc-600 text-zinc-300 py-1 px-2 rounded-sm">
-                {fetchedWod.time} &apos;
-              </span>
-            )}
-          </div>
-          <div className="flex gap-2">
-            {isNotFavorite ? (
-              <TooltipButton
-                color="danger"
-                disabled={isSaving}
-                icon={<LoveIcon />}
-                tooltipText="Save the workout"
-                onClick={handleSave}
-              />
-            ) : (
-              <>
-                <TooltipButton
-                  buttonProps={"scale-80"}
-                  icon={<ArrowsPointing />}
-                  tooltipText="Show details"
-                  variant="light"
-                  onClick={() => openModal("details")}
-                />
-                <TooltipButton
-                  buttonProps={"scale-85"}
-                  icon="✏️"
-                  tooltipText="Edit workout"
-                  onClick={() => handleEditTraining(fetchedWod)}
-                />
-              </>
-            )}
-          </div>
-        </CardHeader>
+        <TrainingHeader
+          {...{
+            isNotFavorite,
+            setFetchedWod,
+            openModal,
+            fetchedWod,
+            isSaving,
+            handleOpenNameModal,
+            handleEditTraining,
+          }}
+        />
+
         <Divider />
 
-        <CardBody
-          className={`grid gap-6 py-4 ${
-            !isNotFavorite
-              ? "max-h-40 overflow-hidden flex items-center justify-center"
-              : "max-h-80 overflow-y-auto"
-          }`}
-          style={{
-            gridTemplateColumns: isNotFavorite
-              ? `repeat(${Math.min(
-                  Object.keys(fetchedWod || {}).filter(
-                    (key) => key !== "type" && key !== "time"
-                  ).length,
-                  4
-                )}, minmax(200px, 1fr))`
-              : "1fr",
+        <TrainingBody
+          {...{
+            isNotFavorite,
+            fetchedWod,
           }}
-        >
-          {isNotFavorite ? (
-            Object.entries(fetchedWod || {})
-              .filter(([key]) => key !== "type" && key !== "time")
-              .map(([key, value]) =>
-                value ? (
-                  <div
-                    key={key}
-                    className="p-4 rounded-lg shadow-md bg-content1"
-                  >
-                    <h3 className="text-lg font-bold uppercase text-left mb-3 text-zinc-200">
-                      {key}
-                    </h3>
-                    <pre className="whitespace-pre-wrap text-sm mt-3 text-zinc-300">
-                      {String(value)}
-                    </pre>
-                  </div>
-                ) : null
-              )
-          ) : (
-            <pre
-              className="text-sm text-zinc-300 text-left"
-              style={{
-                display: "-webkit-box",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: 5,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "100%",
-              }}
-            >
-              {fetchedWod?.metcon || "No metcon available"}
-            </pre>
-          )}
-        </CardBody>
+        />
       </Card>
+
+      <AddNameModal
+        isOpen={isNameModalOpen}
+        setTrainingName={setTrainingName}
+        trainingName={trainingName}
+        onClose={() => closeModal("name")}
+        onSave={handleSaveWithName}
+      />
 
       <DetailsModal
         fetchedWod={fetchedWod}
