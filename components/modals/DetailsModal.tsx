@@ -24,26 +24,30 @@ const DetailsModal = ({
   onChangeTraining,
   onDeleteTraining,
 }: DetailsModalProps) => {
-  const { type, time, ...details } = fetchedWod;
+  const { type, time, name, ...details } = fetchedWod;
   const detailEntries = Object.entries(details).filter(([, value]) => value);
 
   return (
     <>
       <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="max-w-fit w-auto">
+        <ModalContent className="max-w-4xl w-auto p-4">
           {(onClose) => (
             <>
-              <ModalHeader className="flex items-center justify-center gap-5">
+              <ModalHeader className="flex items-center justify-center gap-5 py-4">
                 <div className="flex items-center gap-4">
-                  <h2
-                    className={`text-xl font-semibold text-success-500 flex-grow text-center anton-regular tracking-wider uppercase`}
-                  >
+                  {fetchedWod?.time && (
+                    <span
+                      className={` text-zinc-900 bg-success-500 font-semibold px-2 rounded-sm`}
+                    >
+                      {time} &apos;
+                    </span>
+                  )}
+                  <h2 className="text-3xl font-semibold text-zinc-200 text-center anton-regular tracking-wider uppercase">
                     {type || "Training"}
                   </h2>
-                  {time && (
-                    <span className="text-sm border border-zinc-600 text-zinc-300 py-1 px-2 rounded-sm">
-                      {fetchedWod.time} &apos;
-                    </span>
+                  {fetchedWod?.name && " - "}
+                  {fetchedWod?.name && (
+                    <span className="text-zinc-300 italic">{name}</span>
                   )}
                 </div>
               </ModalHeader>
@@ -57,7 +61,7 @@ const DetailsModal = ({
                     gridTemplateColumns: `repeat(${Math.min(
                       detailEntries.length,
                       4
-                    )}, 1fr)`,
+                    )}, minmax(200px, 1fr))`,
                   }}
                 >
                   {detailEntries.map(([key, value]) => (

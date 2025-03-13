@@ -37,6 +37,7 @@ export interface TrainingState {
 }
 
 export interface TrainingProps {
+  mode: "IA" | "manual";
   fetchedWod: TrainingData;
   setFetchedWod: (wod: TrainingData | null) => void;
   isNotFavorite?: boolean;

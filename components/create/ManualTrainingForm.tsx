@@ -6,18 +6,18 @@ import { Form } from "@nextui-org/form";
 import { Input, Textarea } from "@nextui-org/input";
 import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import DataService from "@/service/data.service";
+import { TrainingData } from "@/types";
 
 interface ManualTrainingFormProps {
-  onSave?: () => void;
   loading: boolean;
+  onSubmit?: (formData: TrainingData) => void;
 }
 
 const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
-  onSave,
   loading,
+  onSubmit,
 }) => {
   const [formData, setFormData] = useState({
     type: "",
@@ -53,8 +53,7 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
 
     try {
       await dataService.addDocumentWithId("favorites", id, training, date);
-      toast("Workout saved successfully!");
-      onSave?.();
+      onSubmit?.(training);
       setFormData({
         type: "",
         time: "",
@@ -66,7 +65,6 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
       });
     } catch (error) {
       console.error("Error saving workout:", error);
-      alert("Failed to save workout.");
     }
   };
 
@@ -109,7 +107,7 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
         </header>
 
         <main className="grid grid-cols-4 gap-3">
-          {["metcon", "strength", "accessory", "warmup"].map((key) => (
+          {["warmup", "strength", "metcon", "accessory"].map((key) => (
             <Textarea
               key={key}
               color="default"
@@ -123,19 +121,6 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
               onChange={handleChange}
             />
           ))}
-          {/* {detailEntries.map(([key, value]) => (
-            <Textarea
-              key={key}
-              color="default"
-              id={key}
-              label={key.charAt(0).toUpperCase() + key.slice(1)}
-              minRows={8}
-              name={key}
-              placeholder={`Enter the ${key}`}
-              value={String(value || "")}
-              variant="faded"
-            />
-          ))} */}
         </main>
 
         <footer className="flex items-center gap-2 justify-end w-full">

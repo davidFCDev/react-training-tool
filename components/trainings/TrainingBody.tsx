@@ -1,5 +1,7 @@
 import { CardBody } from "@nextui-org/card";
 
+import InfoCard from "../common/InfoCard";
+
 type TrainingBodyProps = {
   isNotFavorite: boolean;
   fetchedWod: any;
@@ -8,10 +10,10 @@ type TrainingBodyProps = {
 const TrainingBody = ({ isNotFavorite, fetchedWod }: TrainingBodyProps) => {
   return (
     <CardBody
-      className={`grid gap-6 py-2 ${
+      className={`grid gap-6  ${
         !isNotFavorite
-          ? "max-h-40 overflow-hidden flex items-center justify-center"
-          : "max-h-80 overflow-y-auto"
+          ? "max-h-40 overflow-hidden flex items-center justify-center py-6"
+          : "max-h-80 overflow-y-auto py-4"
       }`}
       style={{
         gridTemplateColumns: isNotFavorite
@@ -26,33 +28,21 @@ const TrainingBody = ({ isNotFavorite, fetchedWod }: TrainingBodyProps) => {
     >
       {isNotFavorite ? (
         Object.entries(fetchedWod || {})
-          .filter(([key]) => key !== "type" && key !== "time")
+          .filter(([key]) => key !== "type" && key !== "time" && key !== "name")
           .map(([key, value]) =>
             value ? (
-              <div key={key} className="p-4 rounded-lg shadow-md bg-content1">
-                <h3 className="text-lg font-bold uppercase text-left mb-3 text-zinc-200">
-                  {key}
-                </h3>
-                <pre className="whitespace-pre-wrap text-sm mt-3 text-zinc-300">
-                  {String(value)}
-                </pre>
-              </div>
+              <InfoCard key={key} content={String(value)} title={key} />
             ) : null
           )
       ) : (
-        <pre
-          className="text-sm text-zinc-300 text-left"
-          style={{
-            display: "-webkit-box",
-            WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 5,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: "100%",
-          }}
-        >
-          {fetchedWod?.metcon || "No metcon available"}
-        </pre>
+        <div className="flex items-center justify-start gap-3">
+          <h3 className="text-base font-bold uppercase text-left text-success-500">
+            Info:
+          </h3>
+          <pre className="whitespace-pre-wrap text-base text-zinc-300">
+            {fetchedWod?.name || "No description available"}
+          </pre>
+        </div>
       )}
     </CardBody>
   );

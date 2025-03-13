@@ -18,6 +18,7 @@ import useSaveTraining from "@/hooks/useSaveTraining";
 import { TrainingData, TrainingProps } from "@/types";
 
 export const Training = ({
+  mode,
   fetchedWod,
   setFetchedWod,
   isNotFavorite = false,
@@ -83,7 +84,7 @@ export const Training = ({
     <>
       <Card
         className={`w-full rounded-lg border border-zinc-700 ${
-          isNotFavorite ? "max-w-5xl p-4" : "max-w-3xl p-2"
+          isNotFavorite ? "max-w-5xl p-4" : "min-w-96 p-2 hover:border-zinc-600"
         }`}
       >
         <TrainingHeader
@@ -95,6 +96,7 @@ export const Training = ({
             isSaving,
             handleOpenNameModal,
             handleEditTraining,
+            mode,
           }}
         />
 
@@ -104,6 +106,7 @@ export const Training = ({
           {...{
             isNotFavorite,
             fetchedWod,
+            mode,
           }}
         />
       </Card>

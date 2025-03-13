@@ -12,7 +12,7 @@ import { Training } from "@/components/trainings/Training";
 import useTraining from "@/hooks/useTraining";
 
 const isEmptyTraining = (training: any) =>
-  !training || Object.values(training).every((value) => value === "");
+  !training || Object.values(training).every((value) => !value);
 
 const FORM_CONFIG = {
   IA: {
@@ -30,19 +30,19 @@ const FORM_CONFIG = {
 };
 
 function Create() {
-  const { getTraining, loading, fetchedTraining, setFetchedTraining } =
-    useTraining();
+  const {
+    getTraining,
+    saveTraining,
+    loading,
+    fetchedTraining,
+    setFetchedTraining,
+  } = useTraining();
   const [mode, setMode] = useState<"IA" | "manual">("manual");
 
   const currentForm = FORM_CONFIG[mode];
 
-  const handleSave = (formData: any) => {
-    setFetchedTraining(formData);
-  };
-
   return (
     <div className="w-full min-w-80 h-[80vh] flex flex-col items-center justify-between">
-      {/* Conditionally render forms */}
       {!loading && (!fetchedTraining || isEmptyTraining(fetchedTraining)) && (
         <>
           <CreateFormContainer
@@ -50,13 +50,12 @@ function Create() {
             form={currentForm.form({
               loading,
               setFetchedWod: setFetchedTraining,
-              onSubmit: mode === "IA" ? getTraining : handleSave,
+              onSubmit: mode === "IA" ? getTraining : saveTraining,
             })}
             subtitle={currentForm.subtitle}
             title={currentForm.title}
           />
 
-          {/* Mode toggle buttons */}
           <footer className="flex space-x-4">
             {Object.keys(FORM_CONFIG).map((key) => (
               <Button
@@ -74,20 +73,19 @@ function Create() {
         </>
       )}
 
-      {/* Loading spinner */}
       {loading && (
         <div className="flex justify-center items-center h-80">
           <Spinner color="success" size="lg" />
         </div>
       )}
 
-      {/* Show training if available */}
       {!loading && fetchedTraining && !isEmptyTraining(fetchedTraining) && (
-        <div className="min-w-80">
+        <div className="min-w-80 mt-10">
           <Training
             fetchedWod={fetchedTraining}
             id=""
             isNotFavorite={true}
+            mode={mode}
             setFetchedWod={setFetchedTraining}
           />
         </div>
