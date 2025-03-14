@@ -26,8 +26,8 @@ export const Navbar = () => {
     ? siteConfig.navItems.filter(
         (item) =>
           item.label === "Home" ||
-          item.label === "Create" ||
-          item.label === "Favorites" ||
+          item.label === "New" ||
+          item.label === "Bookmarks" ||
           item.label === "Program" ||
           item.label === "Analytics"
       )

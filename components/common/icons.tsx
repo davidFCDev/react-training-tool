@@ -2,13 +2,20 @@ import * as React from "react";
 
 import { IconSvgProps } from "@/types";
 
-export const PencilIcon: React.FC<IconSvgProps> = () => (
+export const PencilIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => (
   <svg
-    className="size-6"
+    height={size || height}
+    viewBox="0 0 24 24"
+    width={size || width}
+    {...props}
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"
-    viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path

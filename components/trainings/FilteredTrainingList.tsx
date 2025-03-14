@@ -15,7 +15,7 @@ export const FilteredTrainingList = ({
           return (
             <Training
               key={training.id}
-              fetchedWod={training.parsedTraining}
+              fetchedWod={training}
               id={training.id}
               mode="IA"
               setFetchedWod={() => {}}

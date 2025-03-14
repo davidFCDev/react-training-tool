@@ -20,6 +20,12 @@ export interface TrainingData {
   name?: string;
 }
 
+export interface FullTraining extends TrainingData {
+  id: string;
+  date: string;
+  training: TrainingData;
+}
+
 export interface Training {
   id: string;
   training: TrainingData;
@@ -38,8 +44,8 @@ export interface TrainingState {
 
 export interface TrainingProps {
   mode: "IA" | "manual";
-  fetchedWod: TrainingData;
-  setFetchedWod: (wod: TrainingData | null) => void;
+  fetchedWod: TrainingData | FullTraining; // Soporta ambos formatos
+  setFetchedWod: (wod: TrainingData | FullTraining | null) => void;
   isNotFavorite?: boolean;
   id: string;
 }
@@ -62,7 +68,7 @@ export interface BoxDateProps {
   isPlaceholder: boolean;
   isSunday: boolean;
   dayIndex: number;
-  training?: any;
+  training?: TrainingData | FullTraining;
   onClick: () => void;
 }
 
@@ -101,8 +107,8 @@ export interface FilterButtonsProps {
 export interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  training: Record<string, any>;
-  onSave: (training: Record<string, any>) => void;
+  training: TrainingData | FullTraining;
+  onSave: (training: TrainingData | FullTraining) => void;
 }
 
 export interface TrainingFormProps {
@@ -112,7 +118,7 @@ export interface TrainingFormProps {
     observations: string
   ) => void;
   loading: boolean;
-  setFetchedWod: (training: TrainingData | null) => void;
+  setFetchedWod: (training: TrainingData | FullTraining | null) => void;
 }
 
 export interface ModalTrainingProps {
@@ -124,11 +130,11 @@ export interface ModalTrainingProps {
 export interface DetailsModalProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  fetchedWod: TrainingData;
+  fetchedWod: TrainingData | FullTraining;
   showChangeButton?: boolean;
   onChangeTraining?: () => void;
   onDeleteTraining?: () => void;
-  onEditTraining: (training: TrainingData) => void;
+  onEditTraining: (training: TrainingData | FullTraining) => void;
 }
 
 export interface AddTrainingModalProps {
@@ -146,7 +152,7 @@ export interface TrainingScheduleItem {
 }
 
 export interface UseEditTrainingProps {
-  training: Record<string, any>;
-  onSave: (training: Record<string, any>) => void;
+  training: TrainingData | FullTraining;
+  onSave: (training: TrainingData | FullTraining) => void;
   onClose: () => void;
 }

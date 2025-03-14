@@ -1,7 +1,5 @@
-"use client";
-
+import { Divider } from "@mui/material";
 import { Card } from "@nextui-org/card";
-import { Divider } from "@nextui-org/divider";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -15,7 +13,7 @@ import TrainingHeader from "./TrainingHeader";
 
 import useModals from "@/hooks/useModals";
 import useSaveTraining from "@/hooks/useSaveTraining";
-import { TrainingData, TrainingProps } from "@/types";
+import { FullTraining, TrainingData, TrainingProps } from "@/types";
 
 export const Training = ({
   mode,
@@ -43,6 +41,15 @@ export const Training = ({
     openModal,
     closeModal,
   } = useModals();
+
+  // Detecta si es FullTraining o TrainingData
+  const isFullTraining = (fetchedWod as FullTraining)?.id !== undefined;
+
+  // Extraer datos según el tipo
+  const trainingData = isFullTraining
+    ? (fetchedWod as FullTraining).training
+    : fetchedWod;
+  const date = isFullTraining ? (fetchedWod as FullTraining).date : null;
 
   const handleEditTraining = (training: TrainingData) => {
     setTrainingToEdit(training);
@@ -76,7 +83,11 @@ export const Training = ({
 
   const handleUpdateTraining = async (updatedTraining: TrainingData) => {
     await updateTraining(id, updatedTraining);
-    setFetchedWod(updatedTraining);
+    setFetchedWod(
+      isFullTraining
+        ? { ...(fetchedWod as FullTraining), training: updatedTraining }
+        : updatedTraining
+    );
     closeModal("edit");
   };
 
@@ -92,11 +103,12 @@ export const Training = ({
             isNotFavorite,
             setFetchedWod,
             openModal,
-            fetchedWod,
+            fetchedWod: trainingData,
             isSaving,
             handleOpenNameModal,
             handleEditTraining,
             mode,
+            date,
           }}
         />
 
@@ -105,8 +117,9 @@ export const Training = ({
         <TrainingBody
           {...{
             isNotFavorite,
-            fetchedWod,
+            fetchedWod: trainingData,
             mode,
+            date,
           }}
         />
       </Card>
@@ -120,16 +133,18 @@ export const Training = ({
       />
 
       <DetailsModal
-        fetchedWod={fetchedWod}
+        fetchedWod={trainingData}
         isOpen={isTrainingModalOpen}
         onEditTraining={handleEditTraining}
         onOpenChange={() => closeModal("details")}
       />
+
       <ConfirmDeleteModal
         isOpen={isModalOpen}
         onClose={() => closeModal("delete")}
         onConfirm={handleDelete}
       />
+
       {trainingToEdit && (
         <EditTrainingModal
           isOpen={isEditModalOpen}

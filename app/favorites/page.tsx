@@ -2,6 +2,7 @@
 "use client";
 
 import { Spinner } from "@nextui-org/spinner";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { FilterButtons } from "@/components/common/FilterButtons";
 import withAuth from "@/components/hoc/withAuth";
@@ -23,13 +24,30 @@ function Favorites() {
       </div>
       <FilterButtons category={category} setCategory={setCategory} />
       <div className="mt-10">
-        {loading ? (
-          <div className="flex gap-4">
-            <Spinner color="success" size="lg" />
-          </div>
-        ) : (
-          <FilteredTrainingList trainingList={filteredTrainingList} />
-        )}
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <motion.div
+              key="spinner"
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex gap-4"
+              exit={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.4 }}
+            >
+              <Spinner color="success" size="lg" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="trainingList"
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <FilteredTrainingList trainingList={filteredTrainingList} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

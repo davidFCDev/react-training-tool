@@ -4,36 +4,28 @@ import InfoCard from "../common/InfoCard";
 
 type TrainingBodyProps = {
   isNotFavorite: boolean;
-  fetchedWod: any;
+  fetchedWod: Record<string, any>;
 };
 
 const TrainingBody = ({ isNotFavorite, fetchedWod }: TrainingBodyProps) => {
+  const fields = ["warmup", "strength", "metcon", "accessory"];
+  const filteredFields = fields.filter((key) => fetchedWod[key]);
+
   return (
     <CardBody
-      className={`grid gap-6  ${
+      className={`grid gap-6 ${
         !isNotFavorite
           ? "max-h-40 overflow-hidden flex items-center justify-center py-6"
           : "max-h-80 overflow-y-auto py-4"
       }`}
       style={{
-        gridTemplateColumns: isNotFavorite
-          ? `repeat(${Math.min(
-              Object.keys(fetchedWod || {}).filter(
-                (key) => key !== "type" && key !== "time"
-              ).length,
-              4
-            )}, minmax(200px, 1fr))`
-          : "1fr",
+        gridTemplateColumns: `repeat(${filteredFields.length || 1}, minmax(200px, 1fr))`,
       }}
     >
       {isNotFavorite ? (
-        Object.entries(fetchedWod || {})
-          .filter(([key]) => key !== "type" && key !== "time" && key !== "name")
-          .map(([key, value]) =>
-            value ? (
-              <InfoCard key={key} content={String(value)} title={key} />
-            ) : null
-          )
+        filteredFields.map((key) => (
+          <InfoCard key={key} content={String(fetchedWod[key])} title={key} />
+        ))
       ) : (
         <div className="flex items-center justify-start gap-3">
           <h3 className="text-base font-bold uppercase text-left text-success-500">

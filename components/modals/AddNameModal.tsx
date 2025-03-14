@@ -36,11 +36,13 @@ const AddNameModal = ({
       <ModalContent>
         {() => (
           <>
-            <ModalHeader>Add a &quot;name&quot; to your workout</ModalHeader>
+            <ModalHeader>
+              Set a &quot;description&quot; to your workout
+            </ModalHeader>
             <ModalBody>
               <Input
                 color="default"
-                label="Workout Id"
+                label="Workout"
                 value={trainingName}
                 variant="faded"
                 onChange={(e) => setTrainingName(e.target.value)}

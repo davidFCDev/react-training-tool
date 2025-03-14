@@ -60,7 +60,7 @@ export default function RootLayout({
               </Link>
             </footer>
           </div>
-          <Toaster position="top-center" />
+          <Toaster position="bottom-right" />
         </Providers>
       </body>
     </html>

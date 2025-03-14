@@ -4,8 +4,10 @@
 import { Button } from "@nextui-org/button";
 import { Form } from "@nextui-org/form";
 import { Input, Textarea } from "@nextui-org/input";
+import { Select, SelectItem } from "@nextui-org/select";
 import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import DataService from "@/service/data.service";
 import { TrainingData } from "@/types";
@@ -15,22 +17,26 @@ interface ManualTrainingFormProps {
   onSubmit?: (formData: TrainingData) => void;
 }
 
+const initialFormData = {
+  type: "",
+  time: "",
+  metcon: "",
+  strength: "",
+  accessory: "",
+  warmup: "",
+  name: "",
+};
+
 const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
   loading,
   onSubmit,
 }) => {
-  const [formData, setFormData] = useState({
-    type: "",
-    time: "",
-    metcon: "",
-    strength: "",
-    accessory: "",
-    warmup: "",
-    name: "",
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
 
@@ -41,7 +47,7 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
     e.preventDefault();
 
     if (!formData.type || !formData.time || !formData.name) {
-      alert("Please fill in the required fields: Name, Type, and Time.");
+      toast.error("Please fill all the required fields.");
 
       return;
     }
@@ -54,15 +60,7 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
     try {
       await dataService.addDocumentWithId("favorites", id, training, date);
       onSubmit?.(training);
-      setFormData({
-        type: "",
-        time: "",
-        metcon: "",
-        strength: "",
-        accessory: "",
-        warmup: "",
-        name: "",
-      });
+      setFormData(initialFormData);
     } catch (error) {
       console.error("Error saving workout:", error);
     }
@@ -83,16 +81,22 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
             onChange={handleChange}
           />
 
-          <Input
+          <Select
             color="default"
             id="type"
             label="Type"
             name="type"
-            placeholder="Enter the type of training"
+            placeholder="Select the type of training"
             value={formData.type}
             variant="faded"
             onChange={handleChange}
-          />
+          >
+            {["Crossfit", "Hyrox", "Endurance"].map((type) => (
+              <SelectItem key={type} value={type}>
+                {type}
+              </SelectItem>
+            ))}
+          </Select>
 
           <Input
             color="default"
@@ -133,7 +137,11 @@ const ManualTrainingForm: React.FC<ManualTrainingFormProps> = ({
           >
             {loading ? "Saving..." : "Create"}
           </Button>
-          <Button type="reset" variant="bordered">
+          <Button
+            type="button"
+            variant="bordered"
+            onPress={() => setFormData(initialFormData)}
+          >
             Reset
           </Button>
         </footer>

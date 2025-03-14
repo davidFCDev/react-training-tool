@@ -11,6 +11,8 @@ import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Input, Textarea } from "@nextui-org/input";
 
+import { PencilIcon } from "../common/icons";
+
 import { useEditTraining } from "@/hooks/useEditTraining";
 import { EditModalProps } from "@/types";
 
@@ -35,13 +37,36 @@ const EditTrainingModal = ({
       onOpenChange={onClose}
     >
       <ModalContent className="max-w-4xl w-auto">
-        <ModalHeader className="text-2xl font-bold flex items-center justify-between py-6">
-          <h2 className="text-success">
-            Edit <span className="text-zinc-200">Training</span>
-          </h2>
+        <ModalHeader className="text-xl font-bold py-4 italic flex items-center gap-2 text-zinc-200">
+          <h2>Edit your Workout</h2>
+          <PencilIcon size={20} />
+        </ModalHeader>
+        <Divider />
+        <ModalBody className="py-4 flex flex-col gap-4">
           <div className="flex gap-4">
-            <div className="flex gap-2 items-center">
-              <label className="text-sm font-medium uppercase" htmlFor="type">
+            <div className="flex flex-col gap-1 items-start">
+              <label
+                className="text-base font-semibold text-success"
+                htmlFor="name"
+              >
+                Name
+              </label>
+              <Input
+                className="w-72"
+                color="default"
+                id="type"
+                name="name"
+                placeholder="Name"
+                value={formData.name || ""}
+                variant="faded"
+                onChange={(e) => handleChange("name", e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1 items-start">
+              <label
+                className="text-base font-semibold text-success"
+                htmlFor="type"
+              >
                 Type
               </label>
               <Input
@@ -54,8 +79,11 @@ const EditTrainingModal = ({
                 onChange={(e) => handleChange("type", e.target.value)}
               />
             </div>
-            <div className="flex gap-2 items-center">
-              <label className="text-sm font-medium uppercase" htmlFor="time">
+            <div className="flex flex-col gap-1 items-start">
+              <label
+                className="text-base font-semibold text-success"
+                htmlFor="time"
+              >
                 Time
               </label>
               <Input
@@ -69,19 +97,18 @@ const EditTrainingModal = ({
               />
             </div>
           </div>
-        </ModalHeader>
-
-        <Divider />
-        <ModalBody>
           <div
-            className="grid gap-6 py-6"
+            className="grid gap-4"
             style={{
               gridTemplateColumns: `repeat(${detailEntries.length}, 1fr)`,
             }}
           >
             {detailEntries.map(([key, value]) => (
               <div key={key} className="flex flex-col gap-2">
-                <label className="text-sm font-bold uppercase" htmlFor={key}>
+                <label
+                  className="text-base font-semibold text-success capitalize"
+                  htmlFor={key}
+                >
                   {key}
                 </label>
                 <Textarea

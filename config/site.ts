@@ -9,11 +9,11 @@ export const siteConfig = {
       href: "/",
     },
     {
-      label: "Create",
+      label: "New",
       href: "/create",
     },
     {
-      label: "Favorites",
+      label: "Bookmarks",
       href: "/favorites",
     },
     {

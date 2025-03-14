@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Textarea } from "@heroui/input";
 import { Button } from "@nextui-org/button";
 import { Form } from "@nextui-org/form";

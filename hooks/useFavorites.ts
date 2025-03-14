@@ -20,7 +20,7 @@ const useFavorites = () => {
       const data = await dataService.getCollection("favorites");
       const transformedData = data.map((item: any) => ({
         id: item.id,
-        training: item.training || "",
+        training: item.training || {},
         date: item.date || new Date().toISOString(),
       }));
 
@@ -31,26 +31,9 @@ const useFavorites = () => {
     getTraining();
   }, [dispatch]);
 
-  const filteredTrainingList = trainingList
-    .map((training) => {
-      try {
-        const parsedTraining =
-          typeof training.training === "string"
-            ? JSON.parse(training.training)
-            : training.training;
-
-        return { ...training, parsedTraining };
-      } catch (error) {
-        console.error("Error parsing training data:", error);
-
-        return null;
-      }
-    })
-    .filter(
-      (training) =>
-        training &&
-        (category === "All" || training.parsedTraining.type === category)
-    );
+  const filteredTrainingList = trainingList.filter(
+    (training) => category === "All" || training.training?.type === category
+  );
 
   return { category, setCategory, filteredTrainingList, loading };
 };
