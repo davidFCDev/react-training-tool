@@ -1,17 +1,20 @@
-// useEditTraining.js
 import { useEffect, useState } from "react";
 
-import { UseEditTrainingProps } from "@/types";
+import { FullTraining, TrainingData, UseEditTrainingProps } from "@/types";
 
 export const useEditTraining = ({
   training,
   onSave,
   onClose,
 }: UseEditTrainingProps) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<TrainingData>({} as TrainingData);
 
   useEffect(() => {
-    setFormData(training || {});
+    if (training) {
+      setFormData(
+        "id" in training ? { ...(training as FullTraining).training } : training
+      );
+    }
   }, [training]);
 
   const handleChange = (key: string, value: string) => {
@@ -29,14 +32,14 @@ export const useEditTraining = ({
       ])
     );
 
-    onSave(cleanedData);
+    if ("id" in training) {
+      onSave({ ...(training as FullTraining), training: cleanedData });
+    } else {
+      onSave(cleanedData as TrainingData);
+    }
+
     onClose();
   };
 
-  const orderedKeys = ["warmup", "strength", "metcon", "accessory"];
-  const detailEntries = orderedKeys
-    .map((key) => [key, formData[key] || ""])
-    .filter(([key]) => key !== "type" && key !== "time");
-
-  return { formData, handleChange, handleSubmit, detailEntries };
+  return { formData, handleChange, handleSubmit };
 };

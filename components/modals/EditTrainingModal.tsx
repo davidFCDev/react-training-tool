@@ -14,7 +14,7 @@ import { Input, Textarea } from "@nextui-org/input";
 import { PencilIcon } from "../common/icons";
 
 import { useEditTraining } from "@/hooks/useEditTraining";
-import { EditModalProps } from "@/types";
+import { EditModalProps, FullTraining, TrainingData } from "@/types";
 
 const EditTrainingModal = ({
   isOpen,
@@ -22,12 +22,32 @@ const EditTrainingModal = ({
   onClose,
   onSave,
 }: EditModalProps) => {
-  const { formData, handleChange, handleSubmit, detailEntries } =
-    useEditTraining({
-      training,
-      onSave,
-      onClose,
-    });
+  // Detect if the training is a full training or just the data
+  const isFullTraining = "id" in training;
+  const initialTrainingData: TrainingData = isFullTraining
+    ? (training as FullTraining).training
+    : (training as TrainingData);
+
+  const { formData, handleChange, handleSubmit } = useEditTraining({
+    training: initialTrainingData,
+    onSave: (updatedTraining) => {
+      if (isFullTraining) {
+        onSave(
+          isFullTraining
+            ? { ...(training as FullTraining), ...updatedTraining }
+            : (updatedTraining as TrainingData)
+        );
+      } else {
+        onSave(updatedTraining as TrainingData);
+      }
+    },
+    onClose,
+  });
+
+  // Get the additional fields to render
+  const detailEntries = Object.entries(formData).filter(
+    ([key]) => !["name", "type", "time"].includes(key)
+  );
 
   return (
     <Modal
@@ -43,64 +63,35 @@ const EditTrainingModal = ({
         </ModalHeader>
         <Divider />
         <ModalBody className="py-4 flex flex-col gap-4">
+          {/* Campos principales */}
           <div className="flex gap-4">
-            <div className="flex flex-col gap-1 items-start">
-              <label
-                className="text-base font-semibold text-success"
-                htmlFor="name"
-              >
-                Name
-              </label>
-              <Input
-                className="w-72"
-                color="default"
-                id="type"
-                name="name"
-                placeholder="Name"
-                value={formData.name || ""}
-                variant="faded"
-                onChange={(e) => handleChange("name", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1 items-start">
-              <label
-                className="text-base font-semibold text-success"
-                htmlFor="type"
-              >
-                Type
-              </label>
-              <Input
-                color="default"
-                id="type"
-                name="type"
-                placeholder="Type"
-                value={formData.type || ""}
-                variant="faded"
-                onChange={(e) => handleChange("type", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1 items-start">
-              <label
-                className="text-base font-semibold text-success"
-                htmlFor="time"
-              >
-                Time
-              </label>
-              <Input
-                color="default"
-                id="time"
-                name="time"
-                placeholder="Time"
-                value={formData.time || ""}
-                variant="faded"
-                onChange={(e) => handleChange("time", e.target.value)}
-              />
-            </div>
+            {["name", "type", "time"].map((field) => (
+              <div key={field} className="flex flex-col gap-1 items-start">
+                <label
+                  className="text-base font-semibold text-success"
+                  htmlFor={field}
+                >
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                <Input
+                  className="w-full"
+                  color="default"
+                  id={field}
+                  name={field}
+                  placeholder={field}
+                  value={formData[field as keyof TrainingData] || ""}
+                  variant="faded"
+                  onChange={(e) => handleChange(field, e.target.value)}
+                />
+              </div>
+            ))}
           </div>
+
+          {/* Campos adicionales dinámicos */}
           <div
             className="grid gap-4"
             style={{
-              gridTemplateColumns: `repeat(${detailEntries.length}, 1fr)`,
+              gridTemplateColumns: `repeat(${Math.max(detailEntries.length, 1)}, 1fr)`,
             }}
           >
             {detailEntries.map(([key, value]) => (

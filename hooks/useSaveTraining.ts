@@ -10,7 +10,7 @@ import {
 } from "@/redux/favoritesReducer";
 import { useAppDispatch } from "@/redux/store";
 import DataService from "@/service/data.service";
-import { TrainingData } from "@/types";
+import { FullTraining, TrainingData } from "@/types";
 
 const useSaveTraining = () => {
   const [isSaving, setIsSaving] = useState(false);
@@ -86,21 +86,29 @@ const useSaveTraining = () => {
   );
 
   const updateTraining = useCallback(
-    async (id: string, training: TrainingData) => {
+    async (id: string, training: TrainingData | FullTraining) => {
       if (!id || !training || Object.keys(training).length === 0) {
         toast.error("Invalid workout data.");
 
         return;
       }
-
       setIsSaving(true);
       setSaveError(null);
 
-      const updatedData = { date: new Date().toISOString(), training };
+      const updatedData = {
+        date: new Date().toISOString(),
+        ...training,
+      };
 
       try {
         await dataService.updateDocument("favorites", id, updatedData);
-        dispatch(updateFavorite({ id, ...updatedData }));
+        dispatch(
+          updateFavorite({
+            id,
+            training: training as TrainingData,
+            date: updatedData.date,
+          })
+        );
         toast.success("Workout updated successfully.");
       } catch {
         setSaveError("Error updating workout.");

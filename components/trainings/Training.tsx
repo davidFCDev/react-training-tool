@@ -9,6 +9,7 @@ import DetailsModal from "../modals/DetailsModal";
 import EditTrainingModal from "../modals/EditTrainingModal";
 
 import TrainingBody from "./TrainingBody";
+import TrainingFooter from "./TrainingFooter";
 import TrainingHeader from "./TrainingHeader";
 
 import useModals from "@/hooks/useModals";
@@ -31,8 +32,6 @@ export const Training = ({
     setTrainingToEdit,
   } = useSaveTraining();
 
-  const [trainingName, setTrainingName] = useState("");
-
   const {
     isModalOpen,
     isTrainingModalOpen,
@@ -42,116 +41,93 @@ export const Training = ({
     closeModal,
   } = useModals();
 
-  // Detect if the fetchedWod is a FullTraining or a TrainingData
-  const isFullTraining = (fetchedWod as FullTraining)?.id !== undefined;
+  const [trainingName, setTrainingName] = useState("");
 
-  // Extrac
+  const isFullTraining = (fetchedWod as FullTraining)?.id !== undefined;
   const trainingData = isFullTraining
     ? (fetchedWod as FullTraining).training
     : fetchedWod;
   const date = isFullTraining ? (fetchedWod as FullTraining).date : null;
 
-  const handleEditTraining = (training: TrainingData | FullTraining) => {
-    const trainingData = (training as FullTraining).training || training;
+  const handlers = {
+    editTraining: (training: TrainingData | FullTraining) => {
+      setTrainingToEdit((training as FullTraining)?.training || training);
+      openModal("edit");
+    },
+    deleteTraining: () => {
+      deleteTraining(id);
+      closeModal("delete");
+    },
+    saveWithName: () => {
+      if (!trainingName.trim()) {
+        toast.error("Please enter a workout name.");
 
-    setTrainingToEdit(trainingData);
-    openModal("edit");
-  };
-
-  const handleDelete = () => {
-    deleteTraining(id);
-    closeModal("delete");
-  };
-
-  const handleOpenNameModal = () => {
-    openModal("name");
-  };
-
-  const handleSaveWithName = () => {
-    if (!trainingName.trim()) {
-      toast.error("Please enter a workout name.");
-
-      return;
-    }
-
-    const trainingWithName = { ...fetchedWod, name: trainingName };
-
-    saveTraining(trainingWithName, () => {
-      setFetchedWod(null);
-      setTrainingName("");
-      closeModal("name");
-    });
-  };
-
-  const handleUpdateTraining = async (updatedTraining: TrainingData) => {
-    await updateTraining(id, updatedTraining);
-    setFetchedWod(
-      isFullTraining
-        ? { ...(fetchedWod as FullTraining), training: updatedTraining }
-        : updatedTraining
-    );
-    closeModal("edit");
+        return;
+      }
+      saveTraining({ ...fetchedWod, name: trainingName }, () => {
+        setFetchedWod(null);
+        setTrainingName("");
+        closeModal("name");
+      });
+    },
+    updateTraining: async (updatedTraining: TrainingData) => {
+      await updateTraining(id, updatedTraining);
+      setFetchedWod(
+        isFullTraining
+          ? { ...(fetchedWod as FullTraining), training: updatedTraining }
+          : updatedTraining
+      );
+      closeModal("edit");
+    },
   };
 
   return (
     <>
       <Card
-        className={`w-full rounded-lg border border-zinc-700 ${
-          isNotFavorite ? "max-w-5xl p-4" : "min-w-96 p-2 hover:border-zinc-600"
-        }`}
+        className={`w-full rounded-lg border border-zinc-700 ${isNotFavorite ? "" : "min-w-96 p-2 hover:border-zinc-600"}`}
       >
         <TrainingHeader
           {...{
             isNotFavorite,
-            setFetchedWod,
             openModal,
-            fetchedWod: fetchedWod as FullTraining,
-            isSaving,
-            handleOpenNameModal,
-            handleEditTraining,
-            mode,
-            date,
+            fetchedWod,
           }}
+          handleEditTraining={handlers.editTraining}
         />
-
         <Divider />
 
-        <TrainingBody
-          {...{
-            isNotFavorite,
-            fetchedWod: fetchedWod as FullTraining,
-            date,
-          }}
+        <TrainingBody {...{ isNotFavorite, fetchedWod, date }} />
+
+        <TrainingFooter
+          {...{ isNotFavorite, setFetchedWod, openModal, mode }}
         />
       </Card>
 
+      {/* Modales */}
       <AddNameModal
         isOpen={isNameModalOpen}
         setTrainingName={setTrainingName}
         trainingName={trainingName}
         onClose={() => closeModal("name")}
-        onSave={handleSaveWithName}
+        onSave={handlers.saveWithName}
       />
-
       <DetailsModal
         fetchedWod={trainingData}
         isOpen={isTrainingModalOpen}
-        onEditTraining={handleEditTraining}
+        onEditTraining={handlers.editTraining}
         onOpenChange={() => closeModal("details")}
       />
-
       <ConfirmDeleteModal
         isOpen={isModalOpen}
         onClose={() => closeModal("delete")}
-        onConfirm={handleDelete}
+        onConfirm={handlers.deleteTraining}
       />
-
       {trainingToEdit && (
         <EditTrainingModal
           isOpen={isEditModalOpen}
           training={trainingToEdit}
           onClose={() => closeModal("edit")}
-          onSave={handleUpdateTraining}
+          onSave={handlers.updateTraining}
         />
       )}
     </>

@@ -25,10 +25,10 @@ const TrainingBody = ({
 
   return (
     <CardBody
-      className={`grid gap-6 ${
+      className={`grid gap-5 ${
         isNotFavorite
-          ? "max-h-80 overflow-y-auto py-4"
-          : "max-h-40 overflow-hidden flex items-center justify-center py-6"
+          ? "max-h-80 overflow-y-auto p-4"
+          : "max-h-40 overflow-hidden flex items-center justify-center py-4 mt-2"
       }`}
       style={{
         gridTemplateColumns: `repeat(${filteredFields.length || 1}, minmax(200px, 1fr))`,
@@ -43,16 +43,23 @@ const TrainingBody = ({
           />
         ))
       ) : (
-        <div className="flex flex-col items-center justify-start gap-3">
+        <div className="flex flex-col items-center justify-start gap-3 w-full text-sm">
           {!!trainingData?.name && (
-            <div className="flex items-center gap-2">
-              <h4>Info:</h4>
-              <p>{trainingData.name}</p>
+            <div className="flex items-center bg-zinc-800 p-2 rounded-md w-full justify-center">
+              <p className="font-semibold">{trainingData.name}</p>
             </div>
           )}
-          <div className="flex items-center gap-2">
-            <h4>Created:</h4>
-            <p>{date}</p>
+
+          <div className="flex items-center bg-zinc-800 p-2 rounded-md w-full justify-center">
+            <p className="font-light italic text-zinc-300">
+              {date
+                ? new Date(date).toLocaleDateString("en-EN", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })
+                : "No date available"}
+            </p>
           </div>
         </div>
       )}
