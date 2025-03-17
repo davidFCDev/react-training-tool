@@ -9,17 +9,17 @@ import {
 } from "../common/icons";
 import TooltipButton from "../common/TooltipButton";
 
-import { TrainingData } from "@/types";
+import { Training, TrainingData } from "@/types";
 
 type TrainingHeaderProps = {
   isNotFavorite: boolean;
-  setFetchedWod: (wod: TrainingData | null) => void;
+  setFetchedWod: (wod: Training | TrainingData | null) => void;
   openModal: (modal: "delete" | "details" | "edit" | "name") => void;
-  fetchedWod: TrainingData;
-  isSaving: boolean;
+  fetchedWod: Training | TrainingData;
   handleOpenNameModal: () => void;
   handleEditTraining: (training: TrainingData) => void;
   mode: "IA" | "manual";
+  isSaving: boolean;
 };
 
 const TrainingHeader = ({
@@ -32,6 +32,9 @@ const TrainingHeader = ({
   handleEditTraining,
   mode,
 }: TrainingHeaderProps) => {
+  const trainingData: TrainingData =
+    "training" in fetchedWod ? fetchedWod.training : fetchedWod;
+
   return (
     <CardHeader className="flex justify-between items-center gap-4 py-4">
       {isNotFavorite ? (
@@ -52,21 +55,21 @@ const TrainingHeader = ({
         />
       )}
       <div className={`${isNotFavorite ? "gap-4" : "gap-2"} flex items-center`}>
-        {fetchedWod?.time && (
+        {trainingData?.time && (
           <span
             className={`${isNotFavorite ? "text-lg" : "text-sm"} text-zinc-900 bg-success-500 font-semibold px-2 rounded-sm`}
           >
-            {fetchedWod.time} &apos;
+            {trainingData.time} &apos;
           </span>
         )}
         <h2
           className={`${isNotFavorite ? "text-3xl" : "text-lg"} font-semibold text-zinc-200 flex-grow text-center anton-regular tracking-wider uppercase`}
         >
-          {fetchedWod?.type || "Training"}
+          {trainingData?.type || "Training"}
         </h2>
-        {fetchedWod?.name && isNotFavorite && " - "}
-        {fetchedWod?.name && isNotFavorite && (
-          <span className="text-zinc-300 italic">{fetchedWod.name}</span>
+        {trainingData?.name && isNotFavorite && " - "}
+        {trainingData?.name && isNotFavorite && (
+          <span className="text-zinc-300 italic">{trainingData.name}</span>
         )}
       </div>
       <div className="flex gap-2">
@@ -92,7 +95,7 @@ const TrainingHeader = ({
                 buttonProps={"scale-80"}
                 icon={<PencilIcon />}
                 tooltipText="Edit workout"
-                onClick={() => handleEditTraining(fetchedWod)}
+                onClick={() => handleEditTraining(trainingData)}
               />
             </div>
           )
@@ -101,7 +104,7 @@ const TrainingHeader = ({
             buttonProps={"scale-80"}
             icon={<PencilIcon />}
             tooltipText="Edit workout"
-            onClick={() => handleEditTraining(fetchedWod)}
+            onClick={() => handleEditTraining(trainingData)}
           />
         ) : null}
       </div>

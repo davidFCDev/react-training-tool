@@ -12,6 +12,7 @@ import ManualTrainingForm from "@/components/create/ManualTrainingForm";
 import withAuth from "@/components/hoc/withAuth";
 import { Training } from "@/components/trainings/Training";
 import useTraining from "@/hooks/useTraining";
+import { TrainingData } from "@/types";
 
 const isEmptyTraining = (training: any) =>
   !training || Object.values(training).every((value) => !value);
@@ -102,7 +103,9 @@ function Create() {
             id=""
             isNotFavorite={true}
             mode={mode}
-            setFetchedWod={setFetchedTraining}
+            setFetchedWod={(wod) =>
+              setFetchedTraining(wod as TrainingData | null)
+            }
           />
         </motion.div>
       )}

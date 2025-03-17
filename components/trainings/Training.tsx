@@ -1,5 +1,5 @@
-import { Divider } from "@mui/material";
 import { Card } from "@nextui-org/card";
+import { Divider } from "@nextui-org/divider";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -42,17 +42,19 @@ export const Training = ({
     closeModal,
   } = useModals();
 
-  // Detecta si es FullTraining o TrainingData
+  // Detect if the fetchedWod is a FullTraining or a TrainingData
   const isFullTraining = (fetchedWod as FullTraining)?.id !== undefined;
 
-  // Extraer datos según el tipo
+  // Extrac
   const trainingData = isFullTraining
     ? (fetchedWod as FullTraining).training
     : fetchedWod;
   const date = isFullTraining ? (fetchedWod as FullTraining).date : null;
 
-  const handleEditTraining = (training: TrainingData) => {
-    setTrainingToEdit(training);
+  const handleEditTraining = (training: TrainingData | FullTraining) => {
+    const trainingData = (training as FullTraining).training || training;
+
+    setTrainingToEdit(trainingData);
     openModal("edit");
   };
 
@@ -103,7 +105,7 @@ export const Training = ({
             isNotFavorite,
             setFetchedWod,
             openModal,
-            fetchedWod: trainingData,
+            fetchedWod: fetchedWod as FullTraining,
             isSaving,
             handleOpenNameModal,
             handleEditTraining,
@@ -117,8 +119,7 @@ export const Training = ({
         <TrainingBody
           {...{
             isNotFavorite,
-            fetchedWod: trainingData,
-            mode,
+            fetchedWod: fetchedWod as FullTraining,
             date,
           }}
         />

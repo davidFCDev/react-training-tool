@@ -20,7 +20,7 @@ export interface TrainingData {
   name?: string;
 }
 
-export interface FullTraining extends TrainingData {
+export interface FullTraining {
   id: string;
   date: string;
   training: TrainingData;
@@ -44,7 +44,7 @@ export interface TrainingState {
 
 export interface TrainingProps {
   mode: "IA" | "manual";
-  fetchedWod: TrainingData | FullTraining; // Soporta ambos formatos
+  fetchedWod: TrainingData | FullTraining;
   setFetchedWod: (wod: TrainingData | FullTraining | null) => void;
   isNotFavorite?: boolean;
   id: string;
@@ -107,8 +107,8 @@ export interface FilterButtonsProps {
 export interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  training: TrainingData | FullTraining;
-  onSave: (training: TrainingData | FullTraining) => void;
+  training: TrainingData;
+  onSave: (training: TrainingData) => void;
 }
 
 export interface TrainingFormProps {
