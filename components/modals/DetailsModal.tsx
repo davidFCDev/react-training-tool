@@ -29,27 +29,40 @@ const DetailsModal = ({
     "training" in fetchedWod ? fetchedWod.training : fetchedWod;
 
   const { type, time, name, ...details } = trainingData;
-  const detailEntries = Object.entries(details).filter(
-    ([, value]) => value !== undefined && value !== null && value !== ""
-  );
+
+  // Order to display the details
+  const order = ["warmup", "strength", "metcon", "accessory"];
+  const detailEntries = Object.entries(details)
+    .filter(
+      ([, value]) => value !== undefined && value !== null && value !== ""
+    )
+    .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b));
 
   return (
-    <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent className="max-w-4xl w-auto p-4">
+    <Modal
+      hideCloseButton
+      backdrop="blur"
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+    >
+      <ModalContent className="max-w-4xl w-auto">
         {(onClose) => (
           <>
             <ModalHeader className="flex items-center justify-center gap-5 py-4">
               <div className="flex items-center gap-4">
                 {time && (
-                  <span className="text-zinc-900 bg-success-500 font-semibold px-2 rounded-sm">
-                    {time} &apos;
+                  <span className="text-zinc-900 bg-success-500 font-bold text-sm px-2 py-1 rounded-lg">
+                    {time}&apos;
                   </span>
                 )}
                 <h2 className="text-3xl font-semibold text-zinc-200 text-center anton-regular tracking-wider uppercase">
                   {type || "Training"}
                 </h2>
-                {name && " - "}
-                {name && <span className="text-zinc-300 italic">{name}</span>}
+                {name && (
+                  <span className="text-zinc-300 italic bg-zinc-800 px-3 py-1 rounded-lg">
+                    {name}
+                  </span>
+                )}
               </div>
             </ModalHeader>
 
@@ -71,13 +84,11 @@ const DetailsModal = ({
               </div>
             </ModalBody>
 
-            <ModalFooter className="flex justify-between">
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
-              </Button>
+            <Divider />
 
+            <ModalFooter className="flex justify-end">
               {showChangeButton && (
-                <div className="flex gap-4">
+                <div className="flex gap-1">
                   {onChangeTraining && (
                     <TooltipButton
                       icon={<UpdateIcon />}
@@ -98,6 +109,10 @@ const DetailsModal = ({
                   )}
                 </div>
               )}
+
+              <Button color="default" variant="faded" onPress={onClose}>
+                Close
+              </Button>
             </ModalFooter>
           </>
         )}

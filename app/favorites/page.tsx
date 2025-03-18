@@ -15,15 +15,15 @@ function Favorites() {
 
   return (
     <div className="w-full min-w-80 flex flex-col items-center justify-center">
-      <div>
+      <>
         <h1 className="title">
           Workouts
           <span className="text-success"> List</span>
         </h1>
         <p className="subtitle">Here you can find all your saved workouts</p>
-      </div>
+      </>
       <FilterButtons category={category} setCategory={setCategory} />
-      <div className="mt-10">
+      <div className="mt-6">
         <AnimatePresence mode="wait">
           {loading ? (
             <motion.div

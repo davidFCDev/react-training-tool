@@ -9,7 +9,7 @@ export const FilterButtons = ({
   const categories = ["All", "Crossfit", "Hyrox", "Endurance"];
 
   return (
-    <div className="flex gap-4 mt-5">
+    <div className="flex gap-3 mt-5">
       {categories.map((cat) => (
         <Button
           key={cat}

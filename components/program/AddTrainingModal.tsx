@@ -25,13 +25,14 @@ export const AddTrainingModal = ({
           ) : (
             <Select
               label="Choose Training"
+              variant="faded"
               onSelectionChange={(keys) =>
                 handleTrainingSelect(Array.from(keys)[0] as string)
               }
             >
               {filteredTrainingList.map((training) => (
                 <SelectItem key={training.id} value={training.id}>
-                  {`${training.training.type} - ${training.training.time} mins`}
+                  {`${training.training.time}' - ${training.training.type} - ${training.training.name}`}
                 </SelectItem>
               ))}
             </Select>

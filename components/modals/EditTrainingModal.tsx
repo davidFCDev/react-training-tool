@@ -57,9 +57,9 @@ const EditTrainingModal = ({
       onOpenChange={onClose}
     >
       <ModalContent className="max-w-4xl w-auto">
-        <ModalHeader className="text-xl font-bold py-4 italic flex items-center gap-2 text-zinc-200">
-          <h2>Edit your Workout</h2>
+        <ModalHeader className="text-xl font-semibold py-4 italic flex items-center gap-2 text-zinc-300">
           <PencilIcon size={20} />
+          <h2>Edit your Workout</h2>
         </ModalHeader>
         <Divider />
         <ModalBody className="py-4 flex flex-col gap-4">
@@ -119,10 +119,10 @@ const EditTrainingModal = ({
         </ModalBody>
         <Divider />
         <ModalFooter className="py-4">
-          <Button color="danger" variant="light" onPress={onClose}>
+          <Button color="default" variant="faded" onPress={onClose}>
             Cancel
           </Button>
-          <Button color="success" onPress={handleSubmit}>
+          <Button color="success" variant="solid" onPress={handleSubmit}>
             Save
           </Button>
         </ModalFooter>

@@ -109,23 +109,23 @@ const useProgram = () => {
 
   return {
     selectedMonth,
-    setSelectedMonth,
     selectedYear,
-    setSelectedYear,
     trainingSchedule,
     loading,
     days,
     isAddTrainingModalOpen,
-    setIsAddTrainingModalOpen,
     isDetailsModalOpen,
-    setIsDetailsModalOpen,
     selectedTraining,
     filteredTrainingList,
+    monthsWithTraining,
+    setSelectedMonth,
+    setSelectedYear,
+    setIsAddTrainingModalOpen,
+    setIsDetailsModalOpen,
     handleDateClick,
     handleTrainingSelect,
     onDeleteTraining,
     openAddTrainingModal,
-    monthsWithTraining,
   };
 };
 
