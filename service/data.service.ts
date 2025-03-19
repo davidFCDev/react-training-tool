@@ -341,6 +341,27 @@ class DataService {
       throw error;
     }
   }
+
+  // Function to get all the occupied dates
+  async getOccupiedDates(collectionName: string): Promise<string[]> {
+    try {
+      const querySnapshot = await getDocs(collection(db, collectionName));
+      const occupiedDates: Set<string> = new Set();
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        if (data.date) {
+          occupiedDates.add(data.date);
+        }
+      });
+
+      return Array.from(occupiedDates);
+    } catch (error) {
+      console.error("Error fetching occupied dates:", error);
+      throw error;
+    }
+  }
 }
 
 export default DataService;

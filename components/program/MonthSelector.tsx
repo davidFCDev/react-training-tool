@@ -1,5 +1,7 @@
 import { Select, SelectItem } from "@nextui-org/select";
 
+import { CheckIcon } from "../common/icons";
+
 import { months } from "@/constants";
 import { MonthSelectorProps } from "@/types";
 
@@ -21,7 +23,12 @@ const MonthSelector = ({
     >
       {months.map((month, index) => (
         <SelectItem key={String(index)} textValue={month} value={String(index)}>
-          {month} {monthsWithTraining.has(index) ? "✅" : ""}
+          <div className="flex justify-start items-center gap-2 w-full">
+            <span>{month}</span>
+            {monthsWithTraining.has(index) && (
+              <CheckIcon className="text-success" size={20} />
+            )}
+          </div>
         </SelectItem>
       ))}
     </Select>

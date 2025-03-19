@@ -38,6 +38,10 @@ export interface TrainingDay {
   date: string;
 }
 
+export interface TrainingSchedule {
+  [date: string]: TrainingDay;
+}
+
 export interface TrainingState {
   favoriteList: Training[];
 }
@@ -102,6 +106,7 @@ export interface TooltipButtonProps {
 export interface FilterButtonsProps {
   category: string;
   setCategory: (category: string) => void;
+  isSmall?: boolean;
 }
 
 export interface EditModalProps {

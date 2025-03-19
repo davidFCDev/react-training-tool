@@ -3,11 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import DataService from "@/service/data.service";
-import { TrainingDay } from "@/types";
-
-interface TrainingSchedule {
-  [date: string]: TrainingDay;
-}
+import { TrainingDay, TrainingSchedule } from "@/types";
 
 const useTrainingSchedule = () => {
   const [trainingSchedule, setTrainingSchedule] = useState<TrainingSchedule>(
