@@ -65,7 +65,7 @@ const Program: React.FC = () => {
       {isAddTrainingModalOpen && (
         <AddTrainingModal
           filteredTrainingList={filteredTrainingList.filter(
-            (training) => training !== null
+            (training) => training.training !== null
           )}
           handleTrainingSelect={handleTrainingSelect}
           isModalOpen={isAddTrainingModalOpen}

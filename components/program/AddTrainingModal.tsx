@@ -42,7 +42,7 @@ export const AddTrainingModal = ({
 
   return (
     <Modal
-      className="pb-2"
+      className="p-3"
       isOpen={isModalOpen}
       size="lg"
       onClose={() => setIsModalOpen(false)}

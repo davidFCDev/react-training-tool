@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useEffect, useState } from "react";
 
 import { setFavorites } from "@/redux/favoritesReducer";

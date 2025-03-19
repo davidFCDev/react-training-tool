@@ -49,19 +49,19 @@ const BoxDate = ({
             {dayIndex}
           </span>
           {training ? (
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center w-full p-2">
               {"type" in training && (
                 <p className="text-center font-bold text-lg uppercase">
                   {training.type}
                 </p>
               )}
               {"time" in training && (
-                <p className="text-sm bg-zinc-700 text-zinc-200 rounded-md px-2 py-1 absolute top-2 right-2">
+                <p className="text-sm bg-zinc-800 text-zinc-300 rounded-md px-2 py-1 absolute top-2 right-2">
                   {training.time}&apos;
                 </p>
               )}
               {"name" in training && (
-                <p className="text-sm absolute bottom-2 w-full px-2 text-center">
+                <p className="text-sm absolute bottom-7 truncate w-full px-2 text-center">
                   {training.name}
                 </p>
               )}
