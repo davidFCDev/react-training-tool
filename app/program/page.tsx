@@ -2,8 +2,8 @@
 "use client";
 
 import withAuth from "@/components/hoc/withAuth";
+import { AddTrainingModal } from "@/components/modals/AddTrainingModal";
 import DetailsModal from "@/components/modals/DetailsModal";
-import { AddTrainingModal } from "@/components/program/AddTrainingModal";
 import Calendar from "@/components/program/Calendar";
 import DaysOfWeek from "@/components/program/DaysOfWeek";
 import MonthSelector from "@/components/program/MonthSelector";
@@ -71,6 +71,7 @@ const Program: React.FC = () => {
           isModalOpen={isAddTrainingModalOpen}
           loading={loading}
           setIsModalOpen={setIsAddTrainingModalOpen}
+          trainingSchedule={trainingSchedule}
         />
       )}
 

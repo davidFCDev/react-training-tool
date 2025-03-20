@@ -33,7 +33,7 @@ export function IATrainingForm({
 
   return (
     <Form
-      className="w-full flex flex-col gap-3"
+      className="w-full flex flex-col gap-3 min-w-96"
       validationBehavior="native"
       onSubmit={handleSubmit}
     >

@@ -45,11 +45,10 @@ const useTrainingSchedule = () => {
 
   const addTraining = async (
     date: string,
-    training: Record<string, any>
+    training: Record<string, any>,
+    id: string
   ): Promise<void> => {
     try {
-      const id = crypto.randomUUID();
-
       await dataService.addDocumentWithId("programming", id, training, date);
       setTrainingSchedule((prev) => ({
         ...prev,

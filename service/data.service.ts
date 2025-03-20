@@ -54,12 +54,20 @@ class DataService {
     date: string
   ) {
     try {
+      const docRef = doc(db, collectionName, id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.error("Error: Document with this ID already exists.");
+        throw new Error("Document already exists");
+      }
+
       const newTraining = { id, date, training };
 
-      await setDoc(doc(db, collectionName, id), newTraining);
+      await setDoc(docRef, newTraining);
       console.log("Document added:", newTraining);
 
-      return id;
+      return newTraining;
     } catch (error) {
       console.error("Error adding document:", error);
       throw error;
@@ -343,22 +351,35 @@ class DataService {
   }
 
   // Function to get all the occupied dates
-  async getOccupiedDates(collectionName: string): Promise<string[]> {
+  async getOccupiedDates(
+    collectionName: string
+  ): Promise<Record<string, any[]>> {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
-      const occupiedDates: Set<string> = new Set();
+      const occupiedDates: Record<string, any[]> = {};
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
 
         if (data.date) {
-          occupiedDates.add(data.date);
+          if (!occupiedDates[data.date]) {
+            occupiedDates[data.date] = [];
+          }
+
+          // Asegurar que se guarda correctamente la estructura del entrenamiento
+          occupiedDates[data.date].push({
+            id: doc.id,
+            training: data.training, // Mantener toda la estructura anidada
+          });
         }
       });
 
-      return Array.from(occupiedDates);
+      console.log("🔥 Final Occupied Dates:", Object.keys(occupiedDates));
+      console.log("📅 Occupied Trainings:", occupiedDates);
+
+      return occupiedDates;
     } catch (error) {
-      console.error("Error fetching occupied dates:", error);
+      console.error("❌ Error fetching occupied dates:", error);
       throw error;
     }
   }

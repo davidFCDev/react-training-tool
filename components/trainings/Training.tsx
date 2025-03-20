@@ -24,7 +24,6 @@ export const Training = ({
   id,
 }: TrainingProps) => {
   const {
-    isSaving,
     trainingToEdit,
     saveTraining,
     deleteTraining,

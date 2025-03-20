@@ -2,12 +2,11 @@
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@heroui/modal";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Spinner } from "@nextui-org/spinner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { FilterButtons } from "../common/FilterButtons";
 import { CheckIcon } from "../common/icons";
 
-import DataService from "@/service/data.service";
 import { AddTrainingModalProps } from "@/types";
 
 export const AddTrainingModal = ({
@@ -16,32 +15,23 @@ export const AddTrainingModal = ({
   loading,
   filteredTrainingList,
   handleTrainingSelect,
+  trainingSchedule,
 }: AddTrainingModalProps) => {
-  const [occupiedDates, setOccupiedDates] = useState<string[]>([]);
   const [category, setCategory] = useState("All");
-  const dataService = new DataService();
 
-  useEffect(() => {
-    const fetchOccupiedDates = async () => {
-      try {
-        const dates = await dataService.getOccupiedDates("programming");
+  // Función para verificar si el entrenamiento ya está asignado
+  const isTrainingAssigned = (trainingId: string): boolean => {
+    return Object.values(trainingSchedule).some((day) => day.id === trainingId);
+  };
 
-        setOccupiedDates(dates);
-      } catch (error) {
-        console.error("Error fetching occupied dates:", error);
-      }
-    };
-
-    fetchOccupiedDates();
-  }, []);
-
-  // Filtrar entrenamientos según la categoría seleccionada
+  // Filtrar entrenamientos por categoría
   const filteredTrainings = filteredTrainingList.filter((training) =>
     category === "All" ? true : training.training.type === category
   );
 
   return (
     <Modal
+      backdrop="blur"
       className="p-3"
       isOpen={isModalOpen}
       size="lg"
@@ -68,20 +58,22 @@ export const AddTrainingModal = ({
               }
             >
               {filteredTrainings.map((training) => {
-                const trainingDate = training.date.split("T")[0];
-                const isOccupied = occupiedDates.includes(trainingDate);
+                const isAssigned = isTrainingAssigned(training.id);
 
                 return (
                   <SelectItem
                     key={training.id}
-                    textValue={training.date}
+                    aria-selected={isAssigned}
                     value={training.id}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <p>{`${training.training.time}' - ${training.training.type} - ${training.training.name}`}</p>
-                      {isOccupied && (
-                        <CheckIcon className="text-success" size={20} />
-                      )}
+                      <p className="flex items-center gap-2">
+                        {`${training.training.time}' - ${training.training.type} - ${training.training.name}`}{" "}
+                        {isAssigned && (
+                          <CheckIcon className="text-success" size={20} />
+                        )}{" "}
+                        {/* Agrega el check si está asignado */}
+                      </p>
                     </div>
                   </SelectItem>
                 );

@@ -19,14 +19,16 @@ const isEmptyTraining = (training: any) =>
 
 const FORM_CONFIG = {
   IA: {
-    title: "Generator",
+    title: "Coach",
     colorTitle: "AI",
-    subtitle: "Generate a workout using the AI Training Generator",
+    image: "/bot.png",
+    subtitle: "Get a workout from our AI Training Coach",
     form: (props: any) => <IATrainingForm {...props} />,
   },
   manual: {
     title: "Workout",
     colorTitle: "New",
+    image: "",
     subtitle: "Create your custom workout by filling the form below",
     form: (props: any) => <ManualTrainingForm {...props} />,
   },
@@ -64,6 +66,7 @@ function Create() {
                   setFetchedWod: setFetchedTraining,
                   onSubmit: mode === "IA" ? getTraining : saveTraining,
                 })}
+                image={currentForm.image}
                 subtitle={currentForm.subtitle}
                 title={currentForm.title}
               />

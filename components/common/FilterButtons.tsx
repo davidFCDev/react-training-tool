@@ -10,7 +10,7 @@ export const FilterButtons = ({
   const categories = ["All", "Crossfit", "Hyrox", "Endurance"];
 
   return (
-    <div className={`${isSmall ? "gap-2" : "gap-5"} flex`}>
+    <div className={`${isSmall ? "gap-2 mt-0" : "gap-3 mt-4"} flex`}>
       {categories.map((cat) => (
         <Button
           key={cat}

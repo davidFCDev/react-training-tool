@@ -71,7 +71,11 @@ const useProgram = () => {
     );
 
     if (selectedTraining && selectedTraining.training) {
-      await addTraining(selectedDate, selectedTraining.training);
+      await addTraining(
+        selectedDate,
+        selectedTraining.training,
+        selectedTraining.id
+      );
       closeModals();
     } else {
       console.warn("No valid training found for the selected ID.");

@@ -30,7 +30,9 @@ export default function ButtonMode({
       >
         {mode === "IA" ? (
           <div className="flex items-center gap-2">
-            <Image alt="AI" height={20} src="/bot.png" width={32} />
+            {!isActive ? (
+              <Image alt="AI" height={32} src="/bot.png" width={32} />
+            ) : null}
             {isActive ? "Let's do it!" : "Create with AI"}
           </div>
         ) : isActive ? (
