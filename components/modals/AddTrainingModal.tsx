@@ -1,8 +1,15 @@
 /* eslint-disable no-console */
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/dropdown";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@heroui/modal";
-import { Select, SelectItem } from "@nextui-org/select";
+import { Button } from "@nextui-org/button";
 import { Spinner } from "@nextui-org/spinner";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { FilterButtons } from "../common/FilterButtons";
 import { CheckIcon } from "../common/icons";
@@ -16,15 +23,33 @@ export const AddTrainingModal = ({
   filteredTrainingList,
   handleTrainingSelect,
   trainingSchedule,
+  removeTraining,
 }: AddTrainingModalProps) => {
   const [category, setCategory] = useState("All");
 
-  // Función para verificar si el entrenamiento ya está asignado
   const isTrainingAssigned = (trainingId: string): boolean => {
     return Object.values(trainingSchedule).some((day) => day.id === trainingId);
   };
 
-  // Filtrar entrenamientos por categoría
+  const handleSelectTraining = (trainingId: string) => {
+    if (isTrainingAssigned(trainingId)) {
+      toast.error("This training is already assigned!");
+
+      return;
+    }
+    handleTrainingSelect(trainingId);
+  };
+
+  const handleUnassignTraining = async (trainingId: string) => {
+    const date = Object.keys(trainingSchedule).find(
+      (key) => trainingSchedule[key].id === trainingId
+    );
+
+    if (date) {
+      await removeTraining(date);
+    }
+  };
+
   const filteredTrainings = filteredTrainingList.filter((training) =>
     category === "All" ? true : training.training.type === category
   );
@@ -34,7 +59,7 @@ export const AddTrainingModal = ({
       backdrop="blur"
       className="p-3"
       isOpen={isModalOpen}
-      size="lg"
+      size="xl"
       onClose={() => setIsModalOpen(false)}
     >
       <ModalContent>
@@ -50,35 +75,47 @@ export const AddTrainingModal = ({
           {loading ? (
             <Spinner />
           ) : (
-            <Select
-              label="Choose Training"
-              variant="faded"
-              onSelectionChange={(keys) =>
-                handleTrainingSelect(Array.from(keys)[0] as string)
-              }
-            >
-              {filteredTrainings.map((training) => {
-                const isAssigned = isTrainingAssigned(training.id);
+            <Dropdown className="w-full">
+              <DropdownTrigger className="w-full flex justify-start">
+                <Button className="text-left w-full" variant="faded">
+                  Choose Training
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu className="w-full">
+                {filteredTrainings.map((training) => {
+                  const isAssigned = isTrainingAssigned(training.id);
 
-                return (
-                  <SelectItem
-                    key={training.id}
-                    aria-selected={isAssigned}
-                    value={training.id}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="flex items-center gap-2">
-                        {`${training.training.time}' - ${training.training.type} - ${training.training.name}`}{" "}
+                  return (
+                    <DropdownItem
+                      key={training.id}
+                      className="w-full min-w-[450px]"
+                      variant="faded"
+                      onPress={() => handleSelectTraining(training.id)}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <p className="flex items-center gap-2">
+                          {`${training.training.time}' - ${training.training.type} - ${training.training.name}`}
+                          {isAssigned && (
+                            <CheckIcon className="text-success" size={20} />
+                          )}
+                        </p>
                         {isAssigned && (
-                          <CheckIcon className="text-success" size={20} />
-                        )}{" "}
-                        {/* Agrega el check si está asignado */}
-                      </p>
-                    </div>
-                  </SelectItem>
-                );
-              })}
-            </Select>
+                          <Button
+                            color="danger"
+                            size="sm"
+                            onPress={() => {
+                              handleUnassignTraining(training.id);
+                            }}
+                          >
+                            Unassign
+                          </Button>
+                        )}
+                      </div>
+                    </DropdownItem>
+                  );
+                })}
+              </DropdownMenu>
+            </Dropdown>
           )}
         </ModalBody>
       </ModalContent>

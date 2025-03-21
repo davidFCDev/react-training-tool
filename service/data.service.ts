@@ -349,40 +349,6 @@ class DataService {
       throw error;
     }
   }
-
-  // Function to get all the occupied dates
-  async getOccupiedDates(
-    collectionName: string
-  ): Promise<Record<string, any[]>> {
-    try {
-      const querySnapshot = await getDocs(collection(db, collectionName));
-      const occupiedDates: Record<string, any[]> = {};
-
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-
-        if (data.date) {
-          if (!occupiedDates[data.date]) {
-            occupiedDates[data.date] = [];
-          }
-
-          // Asegurar que se guarda correctamente la estructura del entrenamiento
-          occupiedDates[data.date].push({
-            id: doc.id,
-            training: data.training, // Mantener toda la estructura anidada
-          });
-        }
-      });
-
-      console.log("🔥 Final Occupied Dates:", Object.keys(occupiedDates));
-      console.log("📅 Occupied Trainings:", occupiedDates);
-
-      return occupiedDates;
-    } catch (error) {
-      console.error("❌ Error fetching occupied dates:", error);
-      throw error;
-    }
-  }
 }
 
 export default DataService;

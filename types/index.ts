@@ -149,6 +149,7 @@ export interface AddTrainingModalProps {
   filteredTrainingList: Training[];
   handleTrainingSelect: (trainingId: string) => void;
   trainingSchedule: TrainingSchedule;
+  removeTraining: (date: string) => Promise<void>;
 }
 
 export interface TrainingScheduleItem {

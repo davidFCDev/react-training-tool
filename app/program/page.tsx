@@ -13,22 +13,24 @@ import useProgram from "@/hooks/useProgram";
 const Program: React.FC = () => {
   const {
     selectedMonth,
-    setSelectedMonth,
     selectedYear,
-    setSelectedYear,
     trainingSchedule,
     loading,
     days,
     isAddTrainingModalOpen,
-    setIsAddTrainingModalOpen,
     isDetailsModalOpen,
-    setIsDetailsModalOpen,
     selectedTraining,
     filteredTrainingList,
+    monthsWithTraining,
+    removeTraining,
+    setSelectedMonth,
+    setSelectedYear,
+    setIsAddTrainingModalOpen,
+    setIsDetailsModalOpen,
+    setTrainingSchedule,
     handleDateClick,
     handleTrainingSelect,
     onDeleteTraining,
-    monthsWithTraining,
   } = useProgram();
 
   return (
@@ -70,6 +72,7 @@ const Program: React.FC = () => {
           handleTrainingSelect={handleTrainingSelect}
           isModalOpen={isAddTrainingModalOpen}
           loading={loading}
+          removeTraining={removeTraining}
           setIsModalOpen={setIsAddTrainingModalOpen}
           trainingSchedule={trainingSchedule}
         />

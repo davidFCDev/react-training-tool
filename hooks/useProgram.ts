@@ -22,8 +22,13 @@ const useProgram = () => {
   } = useDateSelector();
 
   const { filteredTrainingList } = useFavorites();
-  const { trainingSchedule, loading, addTraining, removeTraining } =
-    useTrainingSchedule();
+  const {
+    trainingSchedule,
+    loading,
+    addTraining,
+    removeTraining,
+    setTrainingSchedule,
+  } = useTrainingSchedule();
 
   const days = useMemo(() => {
     const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
@@ -122,10 +127,12 @@ const useProgram = () => {
     selectedTraining,
     filteredTrainingList,
     monthsWithTraining,
+    removeTraining,
     setSelectedMonth,
     setSelectedYear,
     setIsAddTrainingModalOpen,
     setIsDetailsModalOpen,
+    setTrainingSchedule,
     handleDateClick,
     handleTrainingSelect,
     onDeleteTraining,

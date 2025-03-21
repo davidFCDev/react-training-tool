@@ -90,6 +90,7 @@ const useTrainingSchedule = () => {
     fetchSchedule,
     addTraining,
     removeTraining,
+    setTrainingSchedule,
   };
 };
 
