@@ -8,6 +8,11 @@ const useFavorites = () => {
   const dispatch = useAppDispatch();
   const [category, setCategory] = useState("All");
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
 
   const trainingList =
     useAppSelector((state) => state.favorites.favoriteList) || [];
@@ -43,7 +48,20 @@ const useFavorites = () => {
     )
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  return { category, setCategory, filteredTrainingList, loading };
+  const paginatedTrainingList = filteredTrainingList.slice(
+    startIndex,
+    endIndex
+  );
+
+  return {
+    category,
+    setCategory,
+    paginatedTrainingList,
+    loading,
+    currentPage,
+    setCurrentPage,
+    totalPages: Math.ceil(filteredTrainingList.length / itemsPerPage),
+  };
 };
 
 export { useFavorites };

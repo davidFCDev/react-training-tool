@@ -12,7 +12,7 @@ import { link as linkStyles } from "@nextui-org/theme";
 import clsx from "clsx";
 import NextLink from "next/link";
 
-import { GithubIcon, Logo } from "../common/icons";
+import { GithubIcon } from "../common/icons";
 import ProfileDropdown from "../user/ProfileDropdown";
 
 import { ThemeSwitch } from "@/components/utils/theme-switch";
@@ -43,9 +43,8 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit ">
-              WOD<span className="text-success">AI</span>
+            <p className="font-bold text-inherit anton-regular tracking-widest text-xl">
+              TR<span className="text-success text-2xl font-bold">AI</span>NING
             </p>
           </NextLink>
         </NavbarBrand>

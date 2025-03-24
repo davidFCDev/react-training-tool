@@ -23,11 +23,11 @@ const TrainingHeader = ({
 
   return (
     <CardHeader
-      className={`${isNotFavorite ? "justify-center" : "justify-between"} flex items-center gap-4 py-4 `}
+      className={`${isNotFavorite ? "justify-center py-4" : "justify-between p-1 px-2"} flex items-center gap-4`}
     >
       {!isNotFavorite && (
         <TooltipButton
-          buttonProps={"scale-85"}
+          buttonProps={"scale-80"}
           color="default"
           icon={<DeleteIcon />}
           tooltipText="Delete workout"
@@ -39,7 +39,7 @@ const TrainingHeader = ({
       <div className={`${isNotFavorite ? "gap-4" : "gap-2"} flex items-center`}>
         {trainingData?.time && (
           <span
-            className={`${isNotFavorite ? "text-base" : "text-sm"} font-bold bg-success rounded-lg text-zinc-900 px-3`}
+            className={`${isNotFavorite ? "text-base" : "text-sm"} font-bold bg-success rounded-md text-zinc-900 px-2`}
           >
             {trainingData.time}&apos;
           </span>
@@ -51,26 +51,24 @@ const TrainingHeader = ({
         </h2>
       </div>
 
-      <div className="flex gap-2">
-        {!isNotFavorite && (
-          <div className="flex items-center">
-            <TooltipButton
-              buttonProps={"scale-80"}
-              icon={<ArrowsPointing />}
-              tooltipText="Show details"
-              variant="flat"
-              onClick={() => openModal("details")}
-            />
-            <TooltipButton
-              buttonProps={"scale-80"}
-              icon={<PencilIcon />}
-              tooltipText="Edit workout"
-              variant="flat"
-              onClick={() => handleEditTraining(trainingData)}
-            />
-          </div>
-        )}
-      </div>
+      {!isNotFavorite && (
+        <div className="flex items-center">
+          <TooltipButton
+            buttonProps={"scale-75"}
+            icon={<ArrowsPointing />}
+            tooltipText="Show details"
+            variant="flat"
+            onClick={() => openModal("details")}
+          />
+          <TooltipButton
+            buttonProps={"scale-75"}
+            icon={<PencilIcon />}
+            tooltipText="Edit workout"
+            variant="flat"
+            onClick={() => handleEditTraining(trainingData)}
+          />
+        </div>
+      )}
     </CardHeader>
   );
 };

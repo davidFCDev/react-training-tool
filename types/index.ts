@@ -107,6 +107,7 @@ export interface FilterButtonsProps {
   category: string;
   setCategory: (category: string) => void;
   isSmall?: boolean;
+  setCurrentPage?: (page: number) => void;
 }
 
 export interface EditModalProps {

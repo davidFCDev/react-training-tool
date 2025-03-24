@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+
 import { Training } from "./Training";
 
 interface FilteredTrainingListProps {

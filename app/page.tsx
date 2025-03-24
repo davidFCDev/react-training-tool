@@ -1,6 +1,7 @@
 "use client";
 import { Link } from "@nextui-org/link";
 import { button as buttonStyles } from "@nextui-org/theme";
+import Image from "next/image";
 
 import { subtitle } from "@/components/utils/primitives";
 import { useAuth } from "@/context/authContext";
@@ -10,14 +11,17 @@ export default function Home() {
 
   return (
     <section className="relative flex flex-col items-center justify-center gap-4 py-8 md:py-20">
-      <div className="inline-block max-w-xl text-center justify-center text-7xl font-extrabold leading-tight anton-regular">
-        <span>Create&nbsp;</span>
-        <span className="text-success">WORKOUTS&nbsp;</span>
+      <div className="inline-block max-w-2xl text-center justify-center text-7xl font-extrabold leading-tight anton-regular">
+        <span>The perfect&nbsp;</span>
+        <span className="text-success">Training&nbsp;</span>
         <br />
-        <span>easy with AI</span>
+        <span className="flex items-center justify-center gap-4">
+          tool with AI{" "}
+          <Image alt="Logo bot" height={100} src="/bot.png" width={100} />
+        </span>{" "}
       </div>
 
-      <div className={`${subtitle({ class: "mt-4" })} text-center `}>
+      <div className={`${subtitle({ class: "mt-4" })} text-center italic`}>
         Easy, fast and free.
       </div>
 
@@ -26,16 +30,16 @@ export default function Home() {
           <>
             <Link
               className={buttonStyles({
+                radius: "lg",
+                variant: "light",
                 color: "success",
-                radius: "full",
-                variant: "ghost",
               })}
               href="/login"
             >
               Login
             </Link>
             <Link
-              className={buttonStyles({ variant: "bordered", radius: "full" })}
+              className={buttonStyles({ variant: "bordered", radius: "lg" })}
               href="/register"
             >
               Register
@@ -44,13 +48,13 @@ export default function Home() {
         ) : (
           <Link
             className={buttonStyles({
-              color: "success",
-              radius: "full",
+              radius: "lg",
+
               variant: "ghost",
             })}
             href="/create"
           >
-            Create Workout
+            Start creating
           </Link>
         )}
       </div>

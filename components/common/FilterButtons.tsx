@@ -6,6 +6,7 @@ export const FilterButtons = ({
   category,
   setCategory,
   isSmall,
+  setCurrentPage,
 }: FilterButtonsProps) => {
   const categories = ["All", "Crossfit", "Hyrox", "Endurance"];
 
@@ -18,7 +19,10 @@ export const FilterButtons = ({
           size={isSmall ? "sm" : "md"}
           value={cat}
           variant={category === cat ? "solid" : "bordered"}
-          onPress={() => setCategory(cat)}
+          onPress={() => {
+            setCategory(cat);
+            setCurrentPage?.(1);
+          }}
         >
           {cat}
         </Button>

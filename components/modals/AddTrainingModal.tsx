@@ -64,7 +64,7 @@ export const AddTrainingModal = ({
     >
       <ModalContent>
         <ModalHeader className="flex justify-between items-center">
-          <span>Trainings</span>
+          <span>Training List</span>
           <FilterButtons
             category={category}
             isSmall={true}
@@ -100,15 +100,14 @@ export const AddTrainingModal = ({
                           )}
                         </p>
                         {isAssigned && (
-                          <Button
-                            color="danger"
-                            size="sm"
-                            onPress={() => {
+                          <button
+                            className="text-danger hover:underline"
+                            onClick={() => {
                               handleUnassignTraining(training.id);
                             }}
                           >
-                            Unassign
-                          </Button>
+                            Release
+                          </button>
                         )}
                       </div>
                     </DropdownItem>

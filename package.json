@@ -15,6 +15,7 @@
     "@heroui/dropdown": "^2.3.10",
     "@heroui/input": "^2.4.10",
     "@heroui/modal": "^2.2.8",
+    "@heroui/pagination": "^2.2.14",
     "@heroui/switch": "^2.2.14",
     "@heroui/tooltip": "^2.2.11",
     "@mui/material": "^6.4.6",

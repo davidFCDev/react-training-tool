@@ -83,7 +83,7 @@ export const Training = ({
   return (
     <>
       <Card
-        className={`w-full rounded-lg border border-zinc-700 ${isNotFavorite ? "" : "min-w-96 p-2 hover:border-zinc-600"}`}
+        className={`w-full rounded-lg border border-zinc-700 ${isNotFavorite ? "" : "min-w-96 p-1 hover:border-zinc-600"}`}
       >
         <TrainingHeader
           {...{

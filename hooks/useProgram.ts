@@ -21,7 +21,7 @@ const useProgram = () => {
     formatDate,
   } = useDateSelector();
 
-  const { filteredTrainingList } = useFavorites();
+  const { paginatedTrainingList } = useFavorites();
   const {
     trainingSchedule,
     loading,
@@ -71,7 +71,7 @@ const useProgram = () => {
   const handleTrainingSelect = async (trainingId: string) => {
     if (!selectedDate) return;
 
-    const selectedTraining = filteredTrainingList.find(
+    const selectedTraining = paginatedTrainingList.find(
       (t) => t?.id === trainingId
     );
 
@@ -125,7 +125,7 @@ const useProgram = () => {
     isAddTrainingModalOpen,
     isDetailsModalOpen,
     selectedTraining,
-    filteredTrainingList,
+    paginatedTrainingList,
     monthsWithTraining,
     removeTraining,
     setSelectedMonth,

@@ -20,14 +20,13 @@ const Program: React.FC = () => {
     isAddTrainingModalOpen,
     isDetailsModalOpen,
     selectedTraining,
-    filteredTrainingList,
+    paginatedTrainingList,
     monthsWithTraining,
     removeTraining,
     setSelectedMonth,
     setSelectedYear,
     setIsAddTrainingModalOpen,
     setIsDetailsModalOpen,
-    setTrainingSchedule,
     handleDateClick,
     handleTrainingSelect,
     onDeleteTraining,
@@ -66,7 +65,7 @@ const Program: React.FC = () => {
 
       {isAddTrainingModalOpen && (
         <AddTrainingModal
-          filteredTrainingList={filteredTrainingList.filter(
+          filteredTrainingList={paginatedTrainingList.filter(
             (training) => training.training !== null
           )}
           handleTrainingSelect={handleTrainingSelect}

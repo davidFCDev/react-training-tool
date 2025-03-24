@@ -53,10 +53,10 @@ export default function AuthForm({
         {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
 
         <div className="flex gap-2">
-          <Button color="success" type="submit" variant="ghost">
+          <Button color="success" type="submit" variant="solid">
             Submit
           </Button>
-          <Button type="reset" variant="flat">
+          <Button type="reset" variant="light">
             Reset
           </Button>
         </div>
