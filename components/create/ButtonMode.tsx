@@ -4,6 +4,8 @@ import { Button } from "@nextui-org/button";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
+import { PencilIcon } from "../common/icons";
+
 interface ButtonModeProps {
   mode: "IA" | "manual";
   currentMode: "IA" | "manual";
@@ -24,8 +26,9 @@ export default function ButtonMode({
       whileTap={{ scale: 0.95 }}
     >
       <Button
-        className={`h-12 text-sm ${isActive ? "border-success" : ""}`}
-        variant={isActive ? "bordered" : "flat"}
+        className={`h-12 text-sm ${isActive ? "border-success w-12" : ""}`}
+        isIconOnly={isActive}
+        variant={isActive ? "bordered" : "light"}
         onPress={onClick}
       >
         {mode === "IA" ? (
@@ -33,12 +36,16 @@ export default function ButtonMode({
             {!isActive ? (
               <Image alt="AI" height={32} src="/bot.png" width={32} />
             ) : null}
-            {isActive ? "Let's do it!" : "Create with AI"}
+            {isActive ? (
+              <Image alt="AI" height={32} src="/bot.png" width={32} />
+            ) : (
+              "Try with AI"
+            )}
           </div>
         ) : isActive ? (
-          "Create"
+          <PencilIcon size={22} />
         ) : (
-          "New workout"
+          "Try manually"
         )}
       </Button>
     </motion.div>

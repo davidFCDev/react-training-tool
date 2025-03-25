@@ -10,22 +10,22 @@ export default function Home() {
   const { user } = useAuth();
 
   return (
-    <section className="relative flex flex-col items-center justify-center gap-4 py-8 md:py-20">
-      <div className="inline-block max-w-2xl text-center justify-center text-7xl font-extrabold leading-tight anton-regular">
+    <section className="relative flex flex-col items-center justify-center py-8 md:py-20">
+      <div className="inline-block max-w-4xl text-center justify-center text-8xl font-extrabold leading-tight anton-regular">
         <span>The perfect&nbsp;</span>
         <span className="text-success">Training&nbsp;</span>
         <br />
         <span className="flex items-center justify-center gap-4">
-          tool with AI{" "}
-          <Image alt="Logo bot" height={100} src="/bot.png" width={100} />
+          <span className="text-success">Tool</span> with AI{" "}
+          <Image alt="Logo bot" height={120} src="/bot.png" width={120} />
         </span>{" "}
       </div>
 
       <div className={`${subtitle({ class: "mt-4" })} text-center italic`}>
-        Easy, fast and free.
+        Create workouts & track your progress
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-5 mt-5">
         {!user ? (
           <>
             <Link
@@ -39,7 +39,7 @@ export default function Home() {
               Login
             </Link>
             <Link
-              className={buttonStyles({ variant: "bordered", radius: "lg" })}
+              className={buttonStyles({ variant: "ghost", radius: "lg" })}
               href="/register"
             >
               Register

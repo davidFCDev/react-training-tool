@@ -47,7 +47,7 @@ function Create() {
   const currentForm = FORM_CONFIG[mode];
 
   return (
-    <div className="w-full min-w-80 h-[80vh] flex flex-col items-center justify-between">
+    <div className="w-full min-w-80 flex flex-col gap-5 items-center justify-between">
       {!loading && (!fetchedTraining || isEmptyTraining(fetchedTraining)) && (
         <>
           <AnimatePresence mode="wait">
