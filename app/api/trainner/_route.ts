@@ -131,23 +131,6 @@ async function generate_training(
       }
       `,
     },
-    // {
-    //   role: "user",
-    //   content:
-    //     "Entrenamiento de Crossfit por equipos con una duración máxima de 60 minutos. Observaciones: Quiero que tenga saltos de cuerda y wall balls",
-    // },
-    // {
-    //   role: "assistant",
-    //   content: `
-    //   {
-    //     "type": "Crossfit",
-    //     "time": "60",
-    //     "warmup": "- 5 min de Assault Bike\\n- 10 min mobility\\n\\n2 Rounds\\n- 10 World’s Greatest Stretch (5/side)\\n- 10 Leg Swings (front & side)\\n- 30\\\" High Knees\\n- 30\\\" Butt Kicks",
-    //     "strength": "Snatch\\n- 5x2 @ 70% 1RM\\n\\nStrict Pull Ups\\n4 Sets\\n- 4x6 Pull Ups Estrictos\\n- 8/12 Ring Rows 2020",
-    //     "metcon": "4 Rounds For Time\\n- 50 Double Unders\\n- 40 Wall Balls (9/6kg)\\n- 30 Box Jump Overs (24/20”)\\n- 20 Burpees over the Box",
-    //     "accessory": "3 Rounds\\n- 12 Bulgarian Split Squats (6/side)\\n- 15 Hollow Rocks\\n- 20 Russian Twists (10/side)"
-    //   }`,
-    // },
     {
       role: "user",
       content: `Entrenamiento de ${training_type} con una duración máxima de ${duration} minutos. ${observations ? `Observaciones: ${observations}` : ""}`,
