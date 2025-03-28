@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "react-training-a"
-  }
+    "default": "react-training-a",
+    "env": "react-training-a"
+  },
+  "targets": {},
+  "etags": {}
 }
